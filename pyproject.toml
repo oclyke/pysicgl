@@ -1,0 +1,10 @@
+[tool.black]
+include = '''
+src\/.*\.pyi?$|
+tests\/.*\.pyi?$|
+examples\/.*\.pyi?$
+'''
+exclude = '''
+third-party\/.*\.pyi?$|
+venv\/.*\.pyi?$
+'''
