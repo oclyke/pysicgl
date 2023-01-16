@@ -106,7 +106,8 @@ PyObject* screen_circle(PyObject* self_in, PyObject* args) {
   int color;
   ext_t u0, v0, diameter;
   if (!PyArg_ParseTuple(
-          args, "O!i(ii)i", &ScreenType, &screen_obj, &color, &u0, &v0, &diameter)) {
+          args, "O!i(ii)i", &ScreenType, &screen_obj, &color, &u0, &v0,
+          &diameter)) {
     return NULL;
   }
 
@@ -125,7 +126,8 @@ PyObject* screen_ellipse(PyObject* self_in, PyObject* args) {
   int color;
   ext_t u0, v0, semiu, semiv;
   if (!PyArg_ParseTuple(
-          args, "O!i(ii)(ii)", &ScreenType, &screen_obj, &color, &u0, &v0, &semiu, &semiv)) {
+          args, "O!i(ii)(ii)", &ScreenType, &screen_obj, &color, &u0, &v0,
+          &semiu, &semiv)) {
     return NULL;
   }
   int ret = sicgl_screen_ellipse(

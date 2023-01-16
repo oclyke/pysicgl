@@ -130,7 +130,7 @@ static PyMethodDef tp_methods[] = {
      "draw circle to interface"},
     {"interface_ellipse", (PyCFunction)interface_ellipse, METH_VARARGS,
      "draw ellipse to interface"},
-  
+
     {"screen_fill", (PyCFunction)screen_fill, METH_VARARGS,
      "fill color into screen"},
     {"screen_pixel", (PyCFunction)screen_pixel, METH_VARARGS,
