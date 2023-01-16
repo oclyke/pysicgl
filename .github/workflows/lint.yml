@@ -44,5 +44,5 @@ jobs:
       # lint using pylint
       - name: run black
         run: |
-          . bin/venv/bin/activate
+          . ./venv/bin/activate
           black . --check
