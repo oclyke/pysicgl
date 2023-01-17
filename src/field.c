@@ -82,6 +82,61 @@ static PyObject* allocate_scalar_memory(PyObject* self, PyObject* scalars_in) {
   return PyByteArray_FromObject(PyLong_FromSize_t(scalars * sizeof(double)));
 }
 
+static Py_ssize_t mp_length(PyObject* self_in) {
+  ScalarFieldObject* self = (ScalarFieldObject*)self_in;
+
+  size_t len;
+  int ret = scalar_field_get_scalars(self, &len, NULL);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  return PyLong_FromLong(len);
+}
+
+static PyObject* mp_subscript(PyObject* self_in, PyObject* key) {
+  ScalarFieldObject* self = (ScalarFieldObject*)self_in;
+  size_t len;
+  double* scalars;
+  int ret = scalar_field_get_scalars(self, &len, &scalars);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+  size_t idx = PyLong_AsSize_t(key);
+
+  if (idx > (len - 1)) {
+    PyErr_SetNone(PyExc_IndexError);
+    return NULL;
+  }
+
+  return PyFloat_FromDouble(scalars[idx]);
+}
+
+static int mp_ass_subscript(PyObject* self_in, PyObject* key, PyObject* v) {
+  ScalarFieldObject* self = (ScalarFieldObject*)self_in;
+  size_t len;
+  double* scalars;
+  int ret = scalar_field_get_scalars(self, &len, &scalars);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return -1;
+  }
+  size_t idx = PyLong_AsSize_t(key);
+
+  if (idx > (len - 1)) {
+    PyErr_SetNone(PyExc_IndexError);
+    return -1;
+  }
+
+  // set the double here
+  scalars[idx] = PyFloat_AsDouble(v);
+
+  return 0;
+}
+
+
 static void tp_dealloc(PyObject* self_in) {
   ScalarFieldObject* self = (ScalarFieldObject*)self_in;
   PyBuffer_Release(&self->_scalars_buffer);
@@ -122,6 +177,12 @@ static PyGetSetDef tp_getset[] = {
     {NULL},
 };
 
+static PyMappingMethods tp_as_mapping = {
+    .mp_length = mp_length,
+    .mp_subscript = mp_subscript,
+    .mp_ass_subscript = mp_ass_subscript,
+};
+
 PyTypeObject ScalarFieldType = {
     PyVarObject_HEAD_INIT(NULL, 0).tp_name = "pysicgl.ScalarField",
     .tp_doc = PyDoc_STR("sicgl ScalarField"),
@@ -133,4 +194,5 @@ PyTypeObject ScalarFieldType = {
     .tp_init = tp_init,
     .tp_methods = tp_methods,
     .tp_getset = tp_getset,
+    .tp_as_mapping = tp_as_mapping,
 };
