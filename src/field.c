@@ -194,5 +194,5 @@ PyTypeObject ScalarFieldType = {
     .tp_init = tp_init,
     .tp_methods = tp_methods,
     .tp_getset = tp_getset,
-    .tp_as_mapping = tp_as_mapping,
+    .tp_as_mapping = &tp_as_mapping,
 };
