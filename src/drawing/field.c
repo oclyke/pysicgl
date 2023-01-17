@@ -20,7 +20,6 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
   char* keywords[] = {
       "field", "scalars", "color_sequence", "interp_type", "offset", NULL,
   };
-  PyObject* colors_obj = PyList_New(0);
   if (!PyArg_ParseTupleAndKeywords(
           args, kwds, "O!O!O!|Id", keywords, &ScreenType, &field_obj,
           &ScalarFieldType, &scalar_field_obj, &ColorSequenceType,
