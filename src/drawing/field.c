@@ -14,17 +14,17 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
   InterfaceObject* self = (InterfaceObject*)self_in;
   ScreenObject* field_obj;
   ScalarFieldObject* scalar_field_obj;
-  double offset;
   ColorSequenceObject* color_sequence_obj;
   unsigned int interp_type = 0;
+  double offset = 0.0;
   char* keywords[] = {
-      "field", "scalars", "offset", "color_sequence", "interp_type", NULL,
+      "field", "scalars", "color_sequence", "interp_type", "offset", NULL,
   };
   PyObject* colors_obj = PyList_New(0);
   if (!PyArg_ParseTupleAndKeywords(
-          args, kwds, "O!O!dO!|I", keywords, &ScreenType, &field_obj,
-          &ScalarFieldType, &offset, &scalar_field_obj, &ColorSequenceType,
-          &color_sequence_obj, &interp_type)) {
+          args, kwds, "O!O!O!|Id", keywords, &ScreenType, &field_obj,
+          &ScalarFieldType, &scalar_field_obj, &ColorSequenceType,
+          &color_sequence_obj, &interp_type, &offset)) {
     return NULL;
   }
 
