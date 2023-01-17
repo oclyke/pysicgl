@@ -16,14 +16,14 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
   ScalarFieldObject* scalar_field_obj;
   ColorSequenceObject* color_sequence_obj;
   unsigned int interp_type = 0;
+  double offset = 0.0;
   char* keywords[] = {
-      "field", "scalars", "color_sequence", "interp_type", NULL,
+      "field", "scalars", "color_sequence", "interp_type", "offset", NULL,
   };
-  PyObject* colors_obj = PyList_New(0);
   if (!PyArg_ParseTupleAndKeywords(
-          args, kwds, "O!O!O!|I", keywords, &ScreenType, &field_obj,
+          args, kwds, "O!O!O!|Id", keywords, &ScreenType, &field_obj,
           &ScalarFieldType, &scalar_field_obj, &ColorSequenceType,
-          &color_sequence_obj, &interp_type)) {
+          &color_sequence_obj, &interp_type, &offset)) {
     return NULL;
   }
 
@@ -67,7 +67,8 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
 
   // apply the field
   ret = sicgl_scalar_field(
-      &self->interface, field_obj->screen, scalars, &sequence, interp_map_fn);
+      &self->interface, field_obj->screen, scalars, offset, &sequence,
+      interp_map_fn);
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;

@@ -136,7 +136,6 @@ static int mp_ass_subscript(PyObject* self_in, PyObject* key, PyObject* v) {
   return 0;
 }
 
-
 static void tp_dealloc(PyObject* self_in) {
   ScalarFieldObject* self = (ScalarFieldObject*)self_in;
   PyBuffer_Release(&self->_scalars_buffer);
