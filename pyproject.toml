@@ -1,3 +1,5 @@
+[tool.cibuildwheel]
+
 [tool.black]
 include = '''
 src\/.*\.pyi?$|
