@@ -62,5 +62,4 @@ pysicgl = Extension(
 
 setup(
     ext_modules=[pysicgl],
-    setup_requires=["setuptools_scm"],
 )
