@@ -22,6 +22,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        submodules: true
 
       - name: build wheels
         uses: pypa/cibuildwheel@v2.12.0
