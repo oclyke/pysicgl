@@ -1,5 +1,5 @@
-# continuous integration
-name: ci
+# continuous deployment
+name: cd
 
 on:
   workflow_dispatch:
