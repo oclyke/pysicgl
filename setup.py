@@ -61,10 +61,6 @@ pysicgl = Extension(
 )
 
 setup(
-    name="pysicgl",
-    version="0.0.0",
-    description="sicgl for Python",
-    author="oclyke",
-    url="https://github.com/oclyke/pysicgl",
     ext_modules=[pysicgl],
+    setup_requires=["setuptools_scm"],
 )
