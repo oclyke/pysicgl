@@ -1,1 +1,1 @@
-include third-party/sicgl/include/**/*
+recursive-include third-party/sicgl/include *
