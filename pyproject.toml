@@ -16,7 +16,6 @@ keywords = [
   "c",
   "extension",
 ]
-license = "MIT"
 classifiers = [
   "Topic :: Multimedia :: Graphics",
   "Programming Language :: Python :: 3",
