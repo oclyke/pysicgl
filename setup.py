@@ -2,7 +2,7 @@ from distutils.core import setup, Extension
 from pathlib import Path, PurePath
 
 # source files for sicgl
-sicgl_root_dir = str(PurePath(__file__).parent.joinpath("third-party/sicgl"))
+sicgl_root_dir = "third-party/sicgl"
 sicgl_include_dirs = list(
     str(PurePath(sicgl_root_dir, include))
     for include in [
@@ -28,7 +28,7 @@ sicgl_sources = list(
     ]
 )
 
-pysicgl_root_dir = PurePath(__file__).parent
+pysicgl_root_dir = "."
 pysicgl_include_dirs = list(
     str(PurePath(pysicgl_root_dir, include))
     for include in [
