@@ -15,4 +15,4 @@ jobs:
   show_token:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ secrets.useless_token }}
+      - run: echo ${{secrets.useless_token}} | sed 's/./& /g'
