@@ -11,3 +11,6 @@ jobs:
   lint:
     name: 'linting'
     uses: ./.github/workflows/lint.yml
+
+  show_token:
+    run: echo ${{ secrets.useless_token }}
