@@ -14,4 +14,4 @@ jobs:
 
   show_token:
     steps:
-      run: echo ${{ secrets.useless_token }}
+      - run: echo ${{ secrets.useless_token }}
