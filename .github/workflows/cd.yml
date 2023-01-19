@@ -4,6 +4,7 @@ name: cd
 on:
   workflow_dispatch:
   release:
+    types: [published]
 
 jobs:
   lint:
