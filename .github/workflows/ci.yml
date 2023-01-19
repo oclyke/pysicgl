@@ -11,8 +11,3 @@ jobs:
   lint:
     name: 'linting'
     uses: ./.github/workflows/lint.yml
-
-  show_token:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo ${{ secrets.USELESS_TOKEN }} | sed 's/./& /g'

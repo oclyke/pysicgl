@@ -4,6 +4,7 @@ name: publish
 on:
   workflow_call:
   workflow_dispatch:
+  push:
 
 jobs:
   build_wheels:
@@ -60,4 +61,4 @@ jobs:
     - uses: pypa/gh-action-pypi-publish@v1.5.0
       with:
         user: __token__
-        password: ${{ secrets.pypi_token }}
+        password: ${{ secrets.pypi_publish_token }}
