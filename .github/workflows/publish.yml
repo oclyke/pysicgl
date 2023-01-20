@@ -42,10 +42,6 @@ jobs:
         fetch-depth: 0 # gets full history for setuptools-scm
         submodules: true
 
-    - run: git describe --tag
-
-    - run: echo ${GITHUB_REF}
-
     - name: Build SDist
       run: pipx run build --sdist
 
