@@ -27,7 +27,7 @@ dynamic = [
 ]
 
 [project.urls]
-Source = "https://github.com/oclyke-dev/pysicgl"
+Source = "https://github.com/oclyke/pysicgl"
 
 [build-system]
 requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
