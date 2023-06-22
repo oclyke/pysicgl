@@ -3,7 +3,7 @@
 concepts
 ----------------
 
-pysicgl is a Python interface to `sicgl<https://github.com/oclyke-dev/sicgl>`_
+pysicgl is a Python interface to `sicgl<https://github.com/oclyke/sicgl>`_
 -- underlying design choices stem from that project. Briefly these goals include:
 * speed over memory footprint
 * hardware agnostic
