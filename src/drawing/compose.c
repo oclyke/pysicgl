@@ -102,12 +102,15 @@ PyObject* compose(PyObject* self_in, PyObject* args) {
   ScreenObject* screen;
   Py_buffer sprite;
   CompositorObject* compositor;
-  if (!PyArg_ParseTuple(args, "O!y*O!", &ScreenType, &screen, &sprite, &CompositorType, &compositor)) {
+  if (!PyArg_ParseTuple(
+          args, "O!y*O!", &ScreenType, &screen, &sprite, &CompositorType,
+          &compositor)) {
     return NULL;
   }
 
   int ret = sicgl_compose(
-      &self->interface, screen->screen, sprite.buf, compositor->fn, compositor->args);
+      &self->interface, screen->screen, sprite.buf, compositor->fn,
+      compositor->args);
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;

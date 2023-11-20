@@ -14,11 +14,12 @@ static PyObject* tp_new(PyTypeObject* type, PyObject* args, PyObject* kwds);
 
 /**
  * @brief Creates a new compositor object.
- * 
+ *
  * @return CompositorObject* pointer to the new compositor object.
  */
 CompositorObject* new_compositor_object(compositor_fn fn, void* args) {
-  CompositorObject* self = (CompositorObject*)(CompositorType.tp_alloc(&CompositorType, 0));
+  CompositorObject* self =
+      (CompositorObject*)(CompositorType.tp_alloc(&CompositorType, 0));
   if (self != NULL) {
     self->fn = fn;
     self->args = args;

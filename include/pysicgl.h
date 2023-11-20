@@ -1,6 +1,8 @@
 #pragma once
 
 #include "pysicgl/color_sequence.h"
+#include "pysicgl/compositor.h"
+#include "pysicgl/compositors.h"
 #include "pysicgl/drawing/blit.h"
 #include "pysicgl/drawing/compose.h"
 #include "pysicgl/drawing/field.h"
@@ -11,5 +13,3 @@
 #include "pysicgl/interface.h"
 #include "pysicgl/screen.h"
 #include "pysicgl/utilities.h"
-#include "pysicgl/compositor.h"
-#include "pysicgl/compositors.h"

@@ -16,7 +16,6 @@ extern CompositorObject CompositorDirectClear;
 
 // porter-duff alpha compositing
 
-
 int Compositors_post_ready_init();
 
 PyMODINIT_FUNC PyInit_compositors(void);

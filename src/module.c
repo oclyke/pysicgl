@@ -2,12 +2,12 @@
 #include <Python.h>
 // python includes must come first
 
-#include "pysicgl/submodules/compositors.h"
 #include "pysicgl/color.h"
 #include "pysicgl/color_sequence.h"
 #include "pysicgl/field.h"
 #include "pysicgl/interface.h"
 #include "pysicgl/screen.h"
+#include "pysicgl/submodules/compositors.h"
 #include "sicgl.h"
 
 static PyObject* allocate_pixel_memory(PyObject* self, PyObject* pixels_in) {
@@ -84,7 +84,8 @@ typedef struct _submodule_entry_t {
 static submodule_entry_t pysicgl_submodules[] = {
     {"compositors", PyInit_compositors},
 };
-static size_t num_submodules = sizeof(pysicgl_submodules) / sizeof(submodule_entry_t);
+static size_t num_submodules =
+    sizeof(pysicgl_submodules) / sizeof(submodule_entry_t);
 
 PyMODINIT_FUNC PyInit__sicgl_core(void) {
   // ensure that types are ready
