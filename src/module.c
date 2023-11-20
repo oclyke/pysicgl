@@ -75,7 +75,7 @@ type_entry_t pysicgl_types[] = {
 };
 size_t num_types = sizeof(pysicgl_types) / sizeof(type_entry_t);
 
-PyMODINIT_FUNC PyInit_pysicgl(void) {
+PyMODINIT_FUNC PyInit__sicgl_core(void) {
   // ensure that types are ready
   for (size_t idx = 0; idx < num_types; idx++) {
     type_entry_t entry = pysicgl_types[idx];

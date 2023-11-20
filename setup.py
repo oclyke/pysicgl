@@ -1,4 +1,4 @@
-from distutils.core import setup, Extension
+from setuptools import setup, Extension, find_packages
 from pathlib import Path, PurePath
 
 # source files for sicgl
@@ -54,13 +54,15 @@ pysicgl_sources = list(
     ]
 )
 
-pysicgl = Extension(
-    "pysicgl",
+sicgl_core = Extension(
+    "pysicgl._sicgl_core",
     include_dirs=[*pysicgl_include_dirs, *sicgl_include_dirs],
     sources=[*pysicgl_sources, *sicgl_sources],
 )
 
 setup(
-    ext_modules=[pysicgl],
+    ext_modules=[sicgl_core],
+    packages=find_packages(where="packages"),
+    package_dir={'': 'packages'},
     setup_requires=["setuptools_scm"],
 )
