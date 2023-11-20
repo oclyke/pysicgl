@@ -12,6 +12,17 @@ sicgl_include_dirs = list(
 sicgl_sources = list(
     str(PurePath(sicgl_root_dir, "src", source))
     for source in [
+        "compositors/alpha.c",
+        "compositors/bitwise.c",
+        "compositors/channelwise.c",
+        "compositors/direct.c",
+        "domain/global.c",
+        "domain/interface.c",
+        "domain/screen.c",
+        "private/direct.c",
+        "private/interpolation.c",
+        "blend.c",
+        "blenders.c",
         "blit.c",
         "color_sequence.c",
         "compose.c",
@@ -20,11 +31,7 @@ sicgl_sources = list(
         "iter.c",
         "screen.c",
         "translate.c",
-        "domain/global.c",
-        "domain/interface.c",
-        "domain/screen.c",
-        "private/direct.c",
-        "private/interpolation.c",
+        "unity_color.c",
     ]
 )
 
