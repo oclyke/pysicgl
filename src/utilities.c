@@ -37,3 +37,7 @@ int unpack_ext_t_tuple2(PyObject* obj, ext_t* u, ext_t* v) {
 out:
   return ret;
 }
+
+PyLongObject* PyLong_FromPlatformColorT(color_t color) {
+  return PyLong_FromUnsignedLong(color);
+}

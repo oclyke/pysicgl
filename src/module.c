@@ -4,12 +4,33 @@
 
 #include "pysicgl/color.h"
 #include "pysicgl/color_sequence.h"
+#include "pysicgl/compositor.h"
 #include "pysicgl/field.h"
 #include "pysicgl/interface.h"
 #include "pysicgl/screen.h"
 #include "pysicgl/submodules/compositors.h"
+#include "pysicgl/submodules/functional.h"
 #include "sicgl.h"
 
+/**
+ * @brief Get the number of bytes per pixel.
+ * 
+ * @param self 
+ * @param args 
+ * @return PyObject* Number of bytes per pixel.
+ */
+static PyObject* get_bytes_per_pixel(PyObject* self, PyObject* args) {
+  return PyLong_FromSize_t(bytes_per_pixel());
+}
+
+/**
+ * @brief Allocate memory for a specified number of pixels.
+ * 
+ * @param self
+ * @param pixels_in Number of pixels for which to allocate
+ *  memory.
+ * @return PyObject* Allocated memory as a bytearray.
+ */
 static PyObject* allocate_pixel_memory(PyObject* self, PyObject* pixels_in) {
   size_t pixels;
   if (PyLong_Check(pixels_in)) {
@@ -23,32 +44,11 @@ static PyObject* allocate_pixel_memory(PyObject* self, PyObject* pixels_in) {
   return PyByteArray_FromObject(PyLong_FromSize_t(pixels * bpp));
 }
 
-static PyObject* gamma_correct(PyObject* self, PyObject* args) {
-  PyObject* input_obj;
-  PyObject* output_obj;
-  if (!PyArg_ParseTuple(
-          args, "O!O!", &InterfaceType, &input_obj, &InterfaceType,
-          &output_obj)) {
-    return NULL;
-  }
-
-  InterfaceObject* input = (InterfaceObject*)input_obj;
-  InterfaceObject* output = (InterfaceObject*)output_obj;
-
-  int ret = sicgl_gamma_correct(&input->interface, &output->interface);
-  if (0 != ret) {
-    PyErr_SetNone(PyExc_OSError);
-    return NULL;
-  }
-
-  return Py_None;
-}
-
-PyMethodDef pysicgl_funcs[] = {
+static PyMethodDef funcs[] = {
+    {"get_bytes_per_pixel", (PyCFunction)get_bytes_per_pixel, METH_NOARGS,
+     "Get the number of bytes per pixel."},
     {"allocate_pixel_memory", (PyCFunction)allocate_pixel_memory, METH_O,
-     "Allocate memory for the specified number of pixels"},
-    {"gamma_correct", (PyCFunction)gamma_correct, METH_VARARGS,
-     "perform gamma correction on interface memory"},
+     "Allocate memory for the specified number of pixels."},
     {NULL},
 };
 
@@ -57,7 +57,7 @@ static PyModuleDef module = {
     "pysicgl",
     "sicgl in Python",
     -1,
-    pysicgl_funcs,
+    funcs,
     NULL,
     NULL,
     NULL,
@@ -83,6 +83,7 @@ typedef struct _submodule_entry_t {
 } submodule_entry_t;
 static submodule_entry_t pysicgl_submodules[] = {
     {"compositors", PyInit_compositors},
+    {"functional", PyInit_functional},
 };
 static size_t num_submodules =
     sizeof(pysicgl_submodules) / sizeof(submodule_entry_t);

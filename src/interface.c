@@ -13,6 +13,11 @@
 #include "pysicgl/drawing/screen.h"
 #include "pysicgl/interface.h"
 #include "pysicgl/screen.h"
+#include "pysicgl/utilities.h"
+
+#include "sicgl/color.h"
+#include "sicgl/gamma.h"
+#include "sicgl/interface.h"
 
 // getset
 static PyObject* get_screen(PyObject* self_in, void* closure) {
@@ -108,6 +113,81 @@ static int tp_init(PyObject* self_in, PyObject* args, PyObject* kwds) {
   return 0;
 }
 
+// methods
+/**
+ * @brief Perform gamma correction on interface memory.
+ * 
+ * @param self 
+ * @param args 
+ * @return PyObject* None.
+ */
+static PyObject* gamma_correct(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  InterfaceObject* output;
+  if (!PyArg_ParseTuple(args, "O!", &InterfaceType, &output)) {
+    return NULL;
+  }
+
+  int ret = sicgl_gamma_correct(&self->interface, &output->interface);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  return Py_None;
+}
+
+/**
+ * @brief Get the pixel color at the specified offset.
+ * 
+ * @param self 
+ * @param args
+ *  - memorv_obj: The memory buffer bytearray.
+ *  - offset_obj: The pixel offset into the buffer.
+ * @return PyObject* the pixel color as an integer.
+ */
+static PyObject* get_pixel_at_offset(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  int offset;
+  if (!PyArg_ParseTuple(args, "i", &offset)) {
+    return NULL;
+  }
+
+  color_t color;
+  int ret = sicgl_interface_get_pixel_offset(&self->interface, offset, &color);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  return PyLong_FromPlatformColorT(color);
+}
+
+/**
+ * @brief Get the pixel color at specified coordinates.
+ * 
+ * @param self 
+ * @param args
+ * - coordinates_obj: The coordinates tuple (u, v).
+ */
+static PyObject* get_pixel_at_coordinates(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  ext_t u;
+  ext_t v;
+  if (!PyArg_ParseTuple(args, "(ii)", &u, &v)) {
+    return NULL;
+  }
+
+  color_t color;
+  int ret = sicgl_interface_get_pixel(&self->interface, u, v, &color);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  return PyLong_FromPlatformColorT(color);
+}
+
 static PyMethodDef tp_methods[] = {
     {"blit", (PyCFunction)blit, METH_VARARGS,
      "blit a sprite onto the interface memory directly"},
@@ -158,6 +238,13 @@ static PyMethodDef tp_methods[] = {
      "draw circle to global"},
     {"global_ellipse", (PyCFunction)global_ellipse, METH_VARARGS,
      "draw ellipse to global"},
+     
+    {"gamma_correct", (PyCFunction)gamma_correct, METH_VARARGS,
+      "perform gamma correction on interface memory"},
+    {"get_pixel_at_offset", (PyCFunction)get_pixel_at_offset, METH_VARARGS,
+      "get pixel color at offset"},
+    {"get_pixel_at_coordinates", (PyCFunction)get_pixel_at_coordinates, METH_VARARGS,
+      "get pixel color at coordinates"},
     {NULL},
 };
 

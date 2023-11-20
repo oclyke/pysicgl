@@ -4,4 +4,4 @@
 #include <Python.h>
 // python includes must come first
 
-PyMODINIT_FUNC PyInit_compositors(void);
+PyMODINIT_FUNC PyInit_functional(void);
