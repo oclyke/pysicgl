@@ -141,8 +141,11 @@ PyObject* compose(PyObject* self_in, PyObject* args) {
       break;
   }
 
-  int ret =
-      sicgl_compose(&self->interface, screen->screen, sprite.buf, compositor);
+  void* compositor_args = NULL;
+
+  int ret = sicgl_compose(
+      &self->interface, screen->screen, sprite.buf, compositor,
+      compositor_args);
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
