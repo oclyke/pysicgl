@@ -289,7 +289,7 @@ static PyMappingMethods tp_as_mapping = {
 };
 
 PyTypeObject ColorSequenceType = {
-    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "pysicgl.ColorSequence",
+    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "_sicgl_core.ColorSequence",
     .tp_doc = PyDoc_STR("sicgl color"),
     .tp_basicsize = sizeof(ColorSequenceObject),
     .tp_itemsize = 0,

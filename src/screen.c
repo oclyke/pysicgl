@@ -237,7 +237,7 @@ static PyGetSetDef tp_getset[] = {
 };
 
 PyTypeObject ScreenType = {
-    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "pysicgl.Screen",
+    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "_sicgl_core.Screen",
     .tp_doc = PyDoc_STR("sicgl screen"),
     .tp_basicsize = sizeof(ScreenObject),
     .tp_itemsize = 0,

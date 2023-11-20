@@ -183,7 +183,7 @@ static PyMappingMethods tp_as_mapping = {
 };
 
 PyTypeObject ScalarFieldType = {
-    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "pysicgl.ScalarField",
+    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "_sicgl_core.ScalarField",
     .tp_doc = PyDoc_STR("sicgl ScalarField"),
     .tp_basicsize = sizeof(ScalarFieldObject),
     .tp_itemsize = 0,

@@ -11,3 +11,5 @@
 #include "pysicgl/interface.h"
 #include "pysicgl/screen.h"
 #include "pysicgl/utilities.h"
+#include "pysicgl/compositor.h"
+#include "pysicgl/compositors.h"

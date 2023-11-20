@@ -2,6 +2,7 @@
 #include <Python.h>
 // python includes must come first
 
+#include "pysicgl/submodules/compositors.h"
 #include "pysicgl/color.h"
 #include "pysicgl/color_sequence.h"
 #include "pysicgl/field.h"
@@ -68,12 +69,22 @@ typedef struct _type_entry_t {
   const char* name;
   PyTypeObject* type;
 } type_entry_t;
-type_entry_t pysicgl_types[] = {
+static type_entry_t pysicgl_types[] = {
     {"Interface", &InterfaceType},         {"Color", &ColorType},
     {"ColorSequence", &ColorSequenceType}, {"Screen", &ScreenType},
-    {"ScalarField", &ScalarFieldType},
+    {"ScalarField", &ScalarFieldType},     {"Compositor", &CompositorType},
 };
-size_t num_types = sizeof(pysicgl_types) / sizeof(type_entry_t);
+static size_t num_types = sizeof(pysicgl_types) / sizeof(type_entry_t);
+
+// collect submodule definitions for the module
+typedef struct _submodule_entry_t {
+  const char* name;
+  PyObject* (*init)(void);
+} submodule_entry_t;
+static submodule_entry_t pysicgl_submodules[] = {
+    {"compositors", PyInit_compositors},
+};
+static size_t num_submodules = sizeof(pysicgl_submodules) / sizeof(submodule_entry_t);
 
 PyMODINIT_FUNC PyInit__sicgl_core(void) {
   // ensure that types are ready
@@ -100,6 +111,21 @@ PyMODINIT_FUNC PyInit__sicgl_core(void) {
     Py_INCREF(entry.type);
     if (PyModule_AddObject(m, entry.name, (PyObject*)entry.type) < 0) {
       Py_DECREF(entry.type);
+      Py_DECREF(m);
+      return NULL;
+    }
+  }
+
+  // create and register submodules
+  for (size_t idx = 0; idx < num_submodules; idx++) {
+    submodule_entry_t entry = pysicgl_submodules[idx];
+    PyObject* submodule = entry.init();
+    if (submodule == NULL) {
+      Py_DECREF(m);
+      return NULL;
+    }
+    if (PyModule_AddObject(m, entry.name, submodule) < 0) {
+      Py_DECREF(submodule);
       Py_DECREF(m);
       return NULL;
     }

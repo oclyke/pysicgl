@@ -45,19 +45,21 @@ pysicgl_include_dirs = list(
 pysicgl_sources = list(
     str(PurePath(pysicgl_root_dir, "src", source))
     for source in [
-        "module.c",
-        "color.c",
-        "color_sequence.c",
-        "field.c",
-        "interface.c",
-        "screen.c",
-        "utilities.c",
         "drawing/blit.c",
         "drawing/compose.c",
         "drawing/field.c",
         "drawing/interface.c",
         "drawing/screen.c",
         "drawing/global.c",
+        "submodules/compositors/module.c",
+        "color_sequence.c",
+        "color.c",
+        "compositor.c",
+        "field.c",
+        "interface.c",
+        "module.c",
+        "screen.c",
+        "utilities.c",
     ]
 )
 

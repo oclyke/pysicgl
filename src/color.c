@@ -35,7 +35,7 @@ static PyMethodDef tp_methods[] = {
 };
 
 PyTypeObject ColorType = {
-    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "pysicgl.Color",
+    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "_sicgl_core.Color",
     .tp_doc = PyDoc_STR("sicgl color"),
     .tp_basicsize = sizeof(ColorObject),
     .tp_itemsize = 0,

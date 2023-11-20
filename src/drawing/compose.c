@@ -4,6 +4,7 @@
 
 #include <errno.h>
 
+#include "pysicgl/compositor.h"
 #include "pysicgl/drawing/blit.h"
 #include "pysicgl/drawing/compose.h"
 #include "pysicgl/interface.h"
@@ -100,52 +101,13 @@ PyObject* compose(PyObject* self_in, PyObject* args) {
   InterfaceObject* self = (InterfaceObject*)self_in;
   ScreenObject* screen;
   Py_buffer sprite;
-  int mode;
-  if (!PyArg_ParseTuple(args, "O!y*i", &ScreenType, &screen, &sprite, &mode)) {
+  CompositorObject* compositor;
+  if (!PyArg_ParseTuple(args, "O!y*O!", &ScreenType, &screen, &sprite, &CompositorType, &compositor)) {
     return NULL;
   }
 
-  compositor_fn compositor = NULL;
-  switch (mode) {
-    case 0:
-      compositor = compositor_set;
-      break;
-
-    case 1:
-      compositor = compositor_add_clamped;
-      break;
-
-    case 2:
-      compositor = compositor_subtract_clamped;
-      break;
-
-    case 3:
-      compositor = compositor_multiply_clamped;
-      break;
-
-    case 4:
-      compositor = compositor_AND;
-      break;
-
-    case 5:
-      compositor = compositor_OR;
-      break;
-
-    case 6:
-      compositor = compositor_XOR;
-      break;
-
-    default:
-      PyErr_SetNone(PyExc_ValueError);
-      return NULL;
-      break;
-  }
-
-  void* compositor_args = NULL;
-
   int ret = sicgl_compose(
-      &self->interface, screen->screen, sprite.buf, compositor,
-      compositor_args);
+      &self->interface, screen->screen, sprite.buf, compositor->fn, compositor->args);
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;

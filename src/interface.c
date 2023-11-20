@@ -168,7 +168,7 @@ static PyGetSetDef tp_getset[] = {
 };
 
 PyTypeObject InterfaceType = {
-    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "pysicgl.Interface",
+    PyVarObject_HEAD_INIT(NULL, 0).tp_name = "_sicgl_core.Interface",
     .tp_doc = PyDoc_STR("sicgl interface"),
     .tp_basicsize = sizeof(InterfaceObject),
     .tp_itemsize = 0,
