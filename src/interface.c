@@ -81,6 +81,7 @@ int Interface_remove_memory(InterfaceObject* self) {
   if (NULL != self->_memory_buffer.obj) {
     PyBuffer_Release(&self->_memory_buffer);
     self->interface.memory = NULL;
+    self->interface.length = 0;
   }
 
 out:
@@ -102,12 +103,15 @@ int Interface_set_memory(
     goto out;
   }
 
+  size_t bpp = bytes_per_pixel();
+
   ret = PyObject_GetBuffer(
       (PyObject*)bytearray_obj, &self->_memory_buffer, PyBUF_WRITABLE);
   if (0 != ret) {
     goto out;
   }
   self->interface.memory = self->_memory_buffer.buf;
+  self->interface.length = self->_memory_buffer.len / bpp;
 
 out:
   return ret;

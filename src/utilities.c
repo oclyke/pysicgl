@@ -39,5 +39,5 @@ out:
 }
 
 PyLongObject* PyLong_FromPlatformColorT(color_t color) {
-  return PyLong_FromUnsignedLong(color);
+  return PyLong_FromLong(color);
 }

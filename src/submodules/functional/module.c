@@ -111,9 +111,6 @@ static PyModuleDef module = {
 };
 
 PyMODINIT_FUNC PyInit_functional(void) {
-  printf("PyInit_functional - EXECUTE\n");
-
-  // create the module
   PyObject* m = PyModule_Create(&module);
 
   return m;

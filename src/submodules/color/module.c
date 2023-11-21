@@ -56,8 +56,6 @@ static PyModuleDef module = {
 };
 
 PyMODINIT_FUNC PyInit_color(void) {
-  printf("PyInit_color - EXECUTE\n");
-  // create the module
   PyObject* m = PyModule_Create(&module);
 
   return m;
