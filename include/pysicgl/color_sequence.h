@@ -12,7 +12,7 @@ extern PyTypeObject ColorSequenceType;
 typedef struct {
   PyObject_HEAD PyObject* _colors;
   int _type;
-  sequence_map_fn _interpolation_map_fn;
+  color_sequence_t _sequence;
 } ColorSequenceObject;
 
 int ColorSequence_post_ready_init();

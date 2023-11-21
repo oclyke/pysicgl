@@ -9,6 +9,15 @@
 #include "sicgl/color.h"
 
 // methods
+//////////
+
+/**
+ * @brief Return the individual RGBA components of the input color as a 4-tuple.
+ * 
+ * @param self 
+ * @param input 
+ * @return PyObject* 
+ */
 static PyObject* get_rgba(PyObject* self, PyObject* input) {
   color_t color = PyLong_AsLong(input);
   return PyTuple_Pack(
@@ -18,6 +27,13 @@ static PyObject* get_rgba(PyObject* self, PyObject* input) {
       PyLong_FromLong(color_channel_alpha(color)));
 }
 
+/**
+ * @brief Return the color comprised of the RGBA input 4-tuple.
+ * 
+ * @param self 
+ * @param input 
+ * @return PyObject* 
+ */
 static PyObject* from_rgba(PyObject* self, PyObject* input) {
   return PyLong_FromLong(color_from_channels(
       PyLong_AsLong(PyTuple_GetItem(input, 0)),

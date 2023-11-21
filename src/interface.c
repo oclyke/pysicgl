@@ -19,7 +19,113 @@
 #include "sicgl/gamma.h"
 #include "sicgl/interface.h"
 
+// utilities for C consumers
+////////////////////////////
+
+/**
+ * @brief Removes the screen object from the interface.
+ * 
+ * @param self 
+ * @return int 
+ */
+int Interface_remove_screen(InterfaceObject* self) {
+  int ret = 0;
+  if (NULL == self) {
+    ret = -ENOMEM;
+    goto out;
+  }
+
+  if (NULL != self->_screen) {
+    Py_DECREF((PyObject*)self->_screen);
+    self->interface.screen = NULL;
+  }
+
+out:
+  return ret;
+}
+
+/**
+ * @brief Sets the screen object.
+ * 
+ * @param self 
+ * @param screen_obj 
+ * @return int 
+ */
+int Interface_set_screen(InterfaceObject* self, ScreenObject* screen_obj) {
+  int ret = 0;
+  if (NULL == self) {
+    ret = -ENOMEM;
+    goto out;
+  }
+
+  self->_screen = screen_obj;
+  Py_INCREF((PyObject*)self->_screen);
+  self->interface.screen = self->_screen->screen;
+
+out:
+  return ret;
+}
+
+/**
+ * @brief Removes the memory object from the interface.
+ * 
+ * @param self 
+ * @return int 
+ */
+int Interface_remove_memory(InterfaceObject* self) {
+  int ret = 0;
+  if (NULL == self) {
+    ret = -ENOMEM;
+    goto out;
+  }
+
+  if (NULL != self->_memory_buffer.obj) {
+    PyBuffer_Release(&self->_memory_buffer);
+    self->interface.memory = NULL;
+  }
+
+out:
+  return ret;
+}
+
+/**
+ * @brief Sets the memory object.
+ * 
+ * @param self 
+ * @param bytearray_obj 
+ * @return int 
+ */
+int Interface_set_memory(InterfaceObject* self, PyByteArrayObject* bytearray_obj) {
+  int ret = 0;
+  if (NULL == self) {
+    ret = -ENOMEM;
+    goto out;
+  }
+
+  ret = PyObject_GetBuffer(
+      (PyObject*)bytearray_obj, &self->_memory_buffer, PyBUF_WRITABLE);
+  if (0 != ret) {
+    goto out;
+  }
+  self->interface.memory = self->_memory_buffer.buf;
+
+out:
+  return ret;
+}
+
 // getset
+/////////
+
+/**
+ * @brief Get a new reference to the screen object.
+ * 
+ * @param self_in 
+ * @param closure 
+ * @return PyObject* 
+ * 
+ * @note This function returns a new reference to the
+ *  screen object.
+ */
 static PyObject* get_screen(PyObject* self_in, void* closure) {
   InterfaceObject* self = (InterfaceObject*)self_in;
   // it is important to return a NEW REFERENCE to the object,
@@ -28,58 +134,95 @@ static PyObject* get_screen(PyObject* self_in, void* closure) {
   Py_INCREF((PyObject*)self->_screen);
   return (PyObject*)self->_screen;
 }
+
+/**
+ * @brief Get a memoryview of the memory buffer.
+ * 
+ * @param self_in 
+ * @param closure 
+ * @return PyObject* 
+ * 
+ * @note This function returns a new reference to the
+ *  memoryview of the memory buffer.
+ */
 static PyObject* get_memory(PyObject* self_in, void* closure) {
   InterfaceObject* self = (InterfaceObject*)self_in;
   return PyMemoryView_FromBuffer(&self->_memory_buffer);
 }
 
+/**
+ * @brief Set the screen object.
+ * 
+ * @param self_in 
+ * @param value 
+ * @param closure 
+ * @return int 
+ * 
+ * @note This function steals a reference to the screen
+ *  object and releases any existing screen object.
+ */
 static int set_screen(PyObject* self_in, PyObject* value, void* closure) {
+  int ret = 0;
   InterfaceObject* self = (InterfaceObject*)self_in;
   if (!PyObject_IsInstance((PyObject*)value, (PyObject*)&ScreenType)) {
     PyErr_SetNone(PyExc_TypeError);
     return -1;
   }
-  ScreenObject* screen_obj = (ScreenObject*)value;
 
-  if (NULL != self->_screen) {
-    Py_DECREF((PyObject*)self->_screen);
-    self->interface.screen = NULL;
+  ret = Interface_remove_screen(self);
+  if (0 != ret) {
+    ret = -1;
+    goto out;
+  }
+  ret = Interface_set_screen(self, (ScreenObject*)value);
+  if (0 != ret) {
+    ret = -1;
+    goto out;
   }
 
-  self->_screen = screen_obj;
-  Py_INCREF((PyObject*)self->_screen);
-  self->interface.screen = self->_screen->screen;
-
-  return 0;
+out:
+  return ret;
 }
 
+/**
+ * @brief Set the memory object.
+ * 
+ * @param self_in 
+ * @param value 
+ * @param closure 
+ * @return int 
+ * 
+ * @note This function relies on PyObject_GetBuffer and
+ *  PyBuffer_Release to handle the memory buffer reference
+ *  count.
+ */
 static int set_memory(PyObject* self_in, PyObject* value, void* closure) {
+  int ret = 0;
   InterfaceObject* self = (InterfaceObject*)self_in;
   if (!PyObject_IsInstance((PyObject*)value, (PyObject*)&PyByteArray_Type)) {
     PyErr_SetNone(PyExc_TypeError);
     return -1;
   }
-  PyByteArrayObject* bytearray_obj = (PyByteArrayObject*)value;
 
-  if (NULL != self->_memory_buffer.obj) {
-    // clean up the old memory
-    PyBuffer_Release(&self->_memory_buffer);
-    self->interface.memory = NULL;
-  }
-
-  int ret = PyObject_GetBuffer(
-      (PyObject*)bytearray_obj, &self->_memory_buffer, PyBUF_WRITABLE);
+  ret = Interface_remove_memory(self);
   if (0 != ret) {
-    return -1;
+    ret = -1;
+    goto out;
   }
-  self->interface.memory = self->_memory_buffer.buf;
+  ret = Interface_set_memory(self, (PyByteArrayObject*)value);
+  if (0 != ret) {
+    ret = -1;
+    goto out;
+  }
 
-  return 0;
+out:
+  return ret;
 }
 
 static void tp_dealloc(InterfaceObject* self) {
+  Interface_remove_memory(self);
+  Interface_remove_screen(self);
   Py_XDECREF(self->_screen);
-  PyBuffer_Release(&self->_memory_buffer);
   Py_TYPE(self)->tp_free(self);
 }
 

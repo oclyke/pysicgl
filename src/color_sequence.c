@@ -33,6 +33,17 @@ static const size_t num_interp_types =
     sizeof(interp_types) / sizeof(interp_type_enty_t);
 
 // utilities for C consumers
+////////////////////////////
+
+/**
+ * @brief Get the colors from the color sequence.
+ * 
+ * @param self 
+ * @param len output parameter for the length of the sequence.
+ * @param colors_out output parameter for the colors in the sequence.
+ * @param colors_out_len indication of space available in colors_out.
+ * @return int 
+ */
 int ColorSequence_get(
     ColorSequenceObject* self, size_t* len, color_t* colors_out,
     size_t colors_out_len) {
@@ -63,6 +74,13 @@ out:
   return ret;
 }
 
+/**
+ * @brief Get the interpolation map function for the given interpolation type.
+ * 
+ * @param interp_type 
+ * @param fn_out 
+ * @return int 
+ */
 int ColorSequence_get_interp_map_fn(
     size_t interp_type, sequence_map_fn* fn_out) {
   int ret = 0;
@@ -83,31 +101,144 @@ out:
   return ret;
 }
 
+/**
+ * @brief Deallocate the color sequence.
+ * 
+ * @param self 
+ * @return int 
+ */
+int ColorSequence_deallocate_sequence(ColorSequenceObject* self) {
+  int ret = 0;
+  if (NULL == self) {
+    ret = -1;
+    goto out;
+  }
+
+  PyMem_Free(self->_sequence.colors);
+  self->_sequence.colors = NULL;
+  self->_sequence.length = 0;
+
+out:
+  return ret;
+}
+
+/**
+ * @brief Allocate memory for the color sequence.
+ * 
+ * @param self 
+ * @param len 
+ * @return int 
+ */
+int ColorSequence_allocate_sequence(ColorSequenceObject* self, size_t len) {
+  int ret = 0;
+  if (NULL == self) {
+    ret = -1;
+    goto out;
+  }
+
+  self->_sequence.colors = PyMem_Malloc(len * sizeof(color_t));
+  if (NULL == self->_sequence.colors) {
+    ret = -ENOMEM;
+    goto out;
+  }
+  self->_sequence.length = len;
+
+out:
+  return ret;
+}
+
 // getset
+/////////
+
+/**
+ * @brief Get the colors object from the color sequence.
+ * 
+ * @param self_in 
+ * @param closure 
+ * @return PyObject* the colors object.
+ * 
+ * @note Increments colors object reference count to give
+ *  ownership to the caller.
+ */
 static PyObject* get_colors(PyObject* self_in, void* closure) {
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
   Py_INCREF(self->_colors);
   return self->_colors;
 }
 
+/**
+ * @brief Set the colors object for the color sequence.
+ * 
+ * @param self_in 
+ * @param value 
+ * @param closure 
+ * @return int 
+ * 
+ * @note Existing colors object reference count is
+ *  decremented to release ownership. New colors object
+ *  reference count is incremented for later use.
+ */
 static int set_colors(PyObject* self_in, PyObject* value, void* closure) {
+  int ret = 0;
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
   if (!PyObject_IsInstance((PyObject*)value, (PyObject*)&PyList_Type)) {
     PyErr_SetNone(PyExc_TypeError);
     return -1;
   }
 
+  // release old colors object and set new one
   if (NULL != self->_colors) {
     Py_DECREF(self->_colors);
   }
-
   self->_colors = value;
   Py_INCREF(self->_colors);
+
+  // determine the length of the new colors object
+  size_t len;
+  ret = ColorSequence_get(self, &len, NULL, 0);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return -1;
+  }
+
+  // allocate memory for the sequence
+  ret = ColorSequence_deallocate_sequence(self);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return -1;
+  }
+  ret = ColorSequence_allocate_sequence(self, len);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return -1;
+  }
+
+  // copy the colors into the sequence
+  ret = ColorSequence_get(self, NULL, self->_sequence.colors, len);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return -1;
+  }
 
   return 0;
 }
 
 // methods
+//////////
+
+/**
+ * @brief Interpolate the color sequence at one or more points using the given
+ *  interpolation type.
+ * 
+ * @param self_in 
+ * @param args
+ * - samples_obj: The sample(s) to interpolate at. (int, float, list, tuple)
+ * - interp_type: The interpolation type. (int)
+ * @param kwds 
+ * @return PyObject* a new reference to the interpolated color(s).
+ * 
+ * @note 
+ */
 static PyObject* interpolate(
     PyObject* self_in, PyObject* args, PyObject* kwds) {
   int ret = 0;
@@ -129,28 +260,6 @@ static PyObject* interpolate(
     return NULL;
   }
 
-  // determine color sequence length
-  size_t len;
-  ret = ColorSequence_get(self, &len, NULL, 0);
-  if (0 != ret) {
-    PyErr_SetNone(PyExc_OSError);
-    return NULL;
-  }
-
-  // allocate space on the stack for the colors
-  color_t colors[len];
-  ret = ColorSequence_get(self, NULL, colors, len);
-  if (0 != ret) {
-    PyErr_SetNone(PyExc_OSError);
-    return NULL;
-  }
-
-  // create the color_sequence_t for sicgl
-  color_sequence_t sequence = {
-      .colors = colors,
-      .length = len,
-  };
-
   // determine the interpolation function
   sequence_map_fn interp_fn;
   ret = ColorSequence_get_interp_map_fn(interp_type, &interp_fn);
@@ -160,34 +269,34 @@ static PyObject* interpolate(
   }
 
   // use this sequences' interpolation method to handle the input
-  PyObject* result = NULL;
   if (PyLong_Check(samples_obj)) {
     // input is a single sample, return the interpolated color directly
     color_t color;
-    ret = interp_fn(&sequence, (double)PyLong_AsLong(samples_obj), &color);
+    ret = interp_fn(&self->_sequence, (double)PyLong_AsLong(samples_obj), &color);
     if (0 != ret) {
       PyErr_SetNone(PyExc_OSError);
       return NULL;
     }
-    result = PyLong_FromLong(color);
+    return PyLong_FromLong(color);
 
   } else if (PyFloat_Check(samples_obj)) {
     // input is a single sample, return the interpolated color directly
     color_t color;
-    ret = interp_fn(&sequence, PyFloat_AsDouble(samples_obj), &color);
+    ret = interp_fn(&self->_sequence, PyFloat_AsDouble(samples_obj), &color);
     if (0 != ret) {
       PyErr_SetNone(PyExc_OSError);
       return NULL;
     }
-    result = PyLong_FromLong(color);
+    return PyLong_FromLong(color);
+
   } else if (PyList_Check(samples_obj)) {
     // input is a list of samples, return a tuple of interpolated colors
     size_t num_samples = PyList_Size(samples_obj);
-    result = PyTuple_New(num_samples);
+    PyObject* result = PyTuple_New(num_samples);
     for (size_t idx = 0; idx < num_samples; idx++) {
       color_t color;
       ret = interp_fn(
-          &sequence, PyFloat_AsDouble(PyList_GetItem(samples_obj, idx)),
+          &self->_sequence, PyFloat_AsDouble(PyList_GetItem(samples_obj, idx)),
           &color);
       if (0 != ret) {
         PyErr_SetNone(PyExc_OSError);
@@ -198,14 +307,16 @@ static PyObject* interpolate(
         return NULL;
       }
     }
+    return result;
+
   } else if (PyTuple_Check(samples_obj)) {
     // input is a tuple of samples, return a tuple of interpolated colors
     size_t num_samples = PyTuple_Size(samples_obj);
-    result = PyTuple_New(num_samples);
+    PyObject* result = PyTuple_New(num_samples);
     for (size_t idx = 0; idx < num_samples; idx++) {
       color_t color;
       ret = interp_fn(
-          &sequence, PyFloat_AsDouble(PyTuple_GetItem(samples_obj, idx)),
+          &self->_sequence, PyFloat_AsDouble(PyTuple_GetItem(samples_obj, idx)),
           &color);
       if (0 != ret) {
         PyErr_SetNone(PyExc_OSError);
@@ -216,14 +327,18 @@ static PyObject* interpolate(
         return NULL;
       }
     }
+
   } else {
     PyErr_SetNone(PyExc_TypeError);
     return NULL;
   }
 
-  return result;
+  // should never get here
+  PyErr_SetNone(PyExc_NotImplementedError);
+  return NULL;
 }
 
+// 
 static Py_ssize_t mp_length(PyObject* self_in) {
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
   return PyList_Size(self->_colors);
@@ -245,6 +360,7 @@ static int mp_ass_subscript(PyObject* self_in, PyObject* key, PyObject* v) {
 
 static void tp_dealloc(PyObject* self_in) {
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
+  ColorSequence_deallocate_sequence(self);
   Py_XDECREF(self->_colors);
   Py_TYPE(self)->tp_free(self);
 }
