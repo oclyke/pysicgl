@@ -115,5 +115,7 @@ PyObject* compose(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }

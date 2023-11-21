@@ -18,6 +18,8 @@ PyObject* global_pixel(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -34,6 +36,8 @@ PyObject* global_line(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -50,6 +54,8 @@ PyObject* global_rectangle(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -67,6 +73,8 @@ PyObject* global_rectangle_filled(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -84,6 +92,8 @@ PyObject* global_circle(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -101,5 +111,7 @@ PyObject* global_ellipse(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }

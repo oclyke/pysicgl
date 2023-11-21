@@ -37,12 +37,12 @@ static const size_t num_interp_types =
 
 /**
  * @brief Get the colors from the color sequence.
- * 
- * @param self 
+ *
+ * @param self
  * @param len output parameter for the length of the sequence.
  * @param colors_out output parameter for the colors in the sequence.
  * @param colors_out_len indication of space available in colors_out.
- * @return int 
+ * @return int
  */
 int ColorSequence_get(
     ColorSequenceObject* self, size_t* len, color_t* colors_out,
@@ -76,10 +76,10 @@ out:
 
 /**
  * @brief Get the interpolation map function for the given interpolation type.
- * 
- * @param interp_type 
- * @param fn_out 
- * @return int 
+ *
+ * @param interp_type
+ * @param fn_out
+ * @return int
  */
 int ColorSequence_get_interp_map_fn(
     size_t interp_type, sequence_map_fn* fn_out) {
@@ -103,9 +103,9 @@ out:
 
 /**
  * @brief Deallocate the color sequence.
- * 
- * @param self 
- * @return int 
+ *
+ * @param self
+ * @return int
  */
 int ColorSequence_deallocate_sequence(ColorSequenceObject* self) {
   int ret = 0;
@@ -124,10 +124,10 @@ out:
 
 /**
  * @brief Allocate memory for the color sequence.
- * 
- * @param self 
- * @param len 
- * @return int 
+ *
+ * @param self
+ * @param len
+ * @return int
  */
 int ColorSequence_allocate_sequence(ColorSequenceObject* self, size_t len) {
   int ret = 0;
@@ -152,11 +152,11 @@ out:
 
 /**
  * @brief Get the colors object from the color sequence.
- * 
- * @param self_in 
- * @param closure 
+ *
+ * @param self_in
+ * @param closure
  * @return PyObject* the colors object.
- * 
+ *
  * @note Increments colors object reference count to give
  *  ownership to the caller.
  */
@@ -168,12 +168,12 @@ static PyObject* get_colors(PyObject* self_in, void* closure) {
 
 /**
  * @brief Set the colors object for the color sequence.
- * 
- * @param self_in 
- * @param value 
- * @param closure 
- * @return int 
- * 
+ *
+ * @param self_in
+ * @param value
+ * @param closure
+ * @return int
+ *
  * @note Existing colors object reference count is
  *  decremented to release ownership. New colors object
  *  reference count is incremented for later use.
@@ -229,15 +229,15 @@ static int set_colors(PyObject* self_in, PyObject* value, void* closure) {
 /**
  * @brief Interpolate the color sequence at one or more points using the given
  *  interpolation type.
- * 
- * @param self_in 
+ *
+ * @param self_in
  * @param args
  * - samples_obj: The sample(s) to interpolate at. (int, float, list, tuple)
  * - interp_type: The interpolation type. (int)
- * @param kwds 
+ * @param kwds
  * @return PyObject* a new reference to the interpolated color(s).
- * 
- * @note 
+ *
+ * @note
  */
 static PyObject* interpolate(
     PyObject* self_in, PyObject* args, PyObject* kwds) {
@@ -272,7 +272,8 @@ static PyObject* interpolate(
   if (PyLong_Check(samples_obj)) {
     // input is a single sample, return the interpolated color directly
     color_t color;
-    ret = interp_fn(&self->_sequence, (double)PyLong_AsLong(samples_obj), &color);
+    ret =
+        interp_fn(&self->_sequence, (double)PyLong_AsLong(samples_obj), &color);
     if (0 != ret) {
       PyErr_SetNone(PyExc_OSError);
       return NULL;
@@ -338,7 +339,7 @@ static PyObject* interpolate(
   return NULL;
 }
 
-// 
+//
 static Py_ssize_t mp_length(PyObject* self_in) {
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
   return PyList_Size(self->_colors);

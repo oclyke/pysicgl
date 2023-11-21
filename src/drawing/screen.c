@@ -18,6 +18,8 @@ PyObject* screen_fill(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -37,6 +39,8 @@ PyObject* screen_pixel(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -57,6 +61,8 @@ PyObject* screen_line(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -77,6 +83,8 @@ PyObject* screen_rectangle(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -97,6 +105,8 @@ PyObject* screen_rectangle_filled(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -117,6 +127,8 @@ PyObject* screen_circle(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -136,5 +148,7 @@ PyObject* screen_ellipse(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }

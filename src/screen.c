@@ -107,6 +107,8 @@ static PyObject* normalize(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -128,6 +130,7 @@ static PyObject* set_corners(PyObject* self_in, PyObject* args) {
     return NULL;
   }
 
+  Py_INCREF(Py_None);
   return Py_None;
 }
 

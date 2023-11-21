@@ -12,12 +12,12 @@
 ////////////////////////////
 
 /**
- * @brief 
- * 
- * @param self 
- * @param len 
- * @param scalars 
- * @return int 
+ * @brief
+ *
+ * @param self
+ * @param len
+ * @param scalars
+ * @return int
  */
 int scalar_field_get_scalars(
     ScalarFieldObject* self, size_t* len, double** scalars) {
@@ -42,10 +42,10 @@ out:
 
 /**
  * @brief
- * 
- * @param self_in 
- * @param closure 
- * @return PyObject* 
+ *
+ * @param self_in
+ * @param closure
+ * @return PyObject*
  */
 static PyObject* get_pixels(PyObject* self_in, void* closure) {
   ScalarFieldObject* self = (ScalarFieldObject*)self_in;
@@ -92,11 +92,11 @@ static int set_memory(PyObject* self_in, PyObject* value, void* closure) {
 //////////
 
 /**
- * @brief 
- * 
- * @param self 
- * @param scalars_in 
- * @return PyObject* 
+ * @brief
+ *
+ * @param self
+ * @param scalars_in
+ * @return PyObject*
  */
 static PyObject* allocate_scalar_memory(PyObject* self, PyObject* scalars_in) {
   size_t scalars;

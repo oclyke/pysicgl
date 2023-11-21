@@ -15,6 +15,8 @@ PyObject* interface_fill(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -31,6 +33,8 @@ PyObject* interface_pixel(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -47,6 +51,8 @@ PyObject* interface_line(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -63,6 +69,8 @@ PyObject* interface_rectangle(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -80,6 +88,8 @@ PyObject* interface_rectangle_filled(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -97,6 +107,8 @@ PyObject* interface_circle(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
@@ -114,5 +126,7 @@ PyObject* interface_ellipse(PyObject* self_in, PyObject* args) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
   }
+
+  Py_INCREF(Py_None);
   return Py_None;
 }

@@ -15,7 +15,7 @@ display_memory = pysicgl.allocate_pixel_memory(display_screen.pixels)
 display = pysicgl.Interface(display_screen, display_memory)
 
 # create a orange-red color using a 4-tuple of RGBA components
-color = pysicgl.Color.from_rgba((255, 128, 3, 0))
+color = pysicgl.color.from_rgba((255, 128, 3, 0))
 
 # draw a pixel directly to the interface origin
 # the coordinates are given in the interface-relative system

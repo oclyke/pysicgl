@@ -74,5 +74,6 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
     return NULL;
   }
 
+  Py_INCREF(Py_None);
   return Py_None;
 }

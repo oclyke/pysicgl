@@ -2,21 +2,21 @@
 #include <Python.h>
 // python includes must come first
 
-#include "pysicgl/color.h"
 #include "pysicgl/color_sequence.h"
 #include "pysicgl/compositor.h"
 #include "pysicgl/field.h"
 #include "pysicgl/interface.h"
 #include "pysicgl/screen.h"
+#include "pysicgl/submodules/color.h"
 #include "pysicgl/submodules/compositors.h"
 #include "pysicgl/submodules/functional.h"
 #include "sicgl.h"
 
 /**
  * @brief Get the number of bytes per pixel.
- * 
- * @param self 
- * @param args 
+ *
+ * @param self
+ * @param args
  * @return PyObject* Number of bytes per pixel.
  */
 static PyObject* get_bytes_per_pixel(PyObject* self, PyObject* args) {
@@ -25,7 +25,7 @@ static PyObject* get_bytes_per_pixel(PyObject* self, PyObject* args) {
 
 /**
  * @brief Allocate memory for a specified number of pixels.
- * 
+ *
  * @param self
  * @param pixels_in Number of pixels for which to allocate
  *  memory.
@@ -70,9 +70,9 @@ typedef struct _type_entry_t {
   PyTypeObject* type;
 } type_entry_t;
 static type_entry_t pysicgl_types[] = {
-    {"Interface", &InterfaceType},         {"Color", &ColorType},
-    {"ColorSequence", &ColorSequenceType}, {"Screen", &ScreenType},
-    {"ScalarField", &ScalarFieldType},     {"Compositor", &CompositorType},
+    {"Interface", &InterfaceType},   {"ColorSequence", &ColorSequenceType},
+    {"Screen", &ScreenType},         {"ScalarField", &ScalarFieldType},
+    {"Compositor", &CompositorType},
 };
 static size_t num_types = sizeof(pysicgl_types) / sizeof(type_entry_t);
 
@@ -82,6 +82,7 @@ typedef struct _submodule_entry_t {
   PyObject* (*init)(void);
 } submodule_entry_t;
 static submodule_entry_t pysicgl_submodules[] = {
+    {"color", PyInit_color},
     {"compositors", PyInit_compositors},
     {"functional", PyInit_functional},
 };
