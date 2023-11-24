@@ -48,3 +48,9 @@ source venv/bin/activate
 ./scripts/third-party/run-clang-format/run-clang-format.py -r include src
 black .
 ```
+
+# design choices
+
+## color sequences
+
+color sequences are immutable. side effects are not allowed.

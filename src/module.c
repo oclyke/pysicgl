@@ -2,12 +2,13 @@
 #include <Python.h>
 // python includes must come first
 
-#include "pysicgl/color_sequence.h"
+#include "pysicgl/color_sequence/sequence.h"
 #include "pysicgl/compositor.h"
 #include "pysicgl/field.h"
 #include "pysicgl/interface.h"
 #include "pysicgl/screen.h"
 #include "pysicgl/submodules/color.h"
+#include "pysicgl/submodules/color_sequence/interpolation.h"
 #include "pysicgl/submodules/composition.h"
 #include "pysicgl/submodules/functional.h"
 #include "sicgl.h"
@@ -83,6 +84,7 @@ typedef struct _submodule_entry_t {
 } submodule_entry_t;
 static submodule_entry_t pysicgl_submodules[] = {
     {"color", PyInit_color},
+    {"color_sequence_interpolation", PyInit_color_sequence_interpolation},
     {"composition", PyInit_composition},
     {"functional", PyInit_functional},
 };
@@ -96,13 +98,6 @@ PyMODINIT_FUNC PyInit__sicgl_core(void) {
     if (PyType_Ready(entry.type) < 0) {
       return NULL;
     }
-  }
-
-  // run additional initialization for types
-  int ret = ColorSequence_post_ready_init();
-  if (0 != ret) {
-    PyErr_SetString(PyExc_OSError, "failed ColorSequence post-ready init");
-    return NULL;
   }
 
   // create the module
