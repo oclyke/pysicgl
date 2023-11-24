@@ -20,7 +20,7 @@ static Py_ssize_t mp_length(PyObject* self_in);
  * @param self
  * @return int
  */
-int ColorSequence_deallocate_sequence(ColorSequenceObject* self) {
+static int deallocate_sequence(ColorSequenceObject* self) {
   int ret = 0;
   if (NULL == self) {
     ret = -1;
@@ -42,7 +42,7 @@ out:
  * @param len
  * @return int
  */
-int ColorSequence_allocate_sequence(ColorSequenceObject* self, size_t len) {
+static int allocate_sequence(ColorSequenceObject* self, size_t len) {
   int ret = 0;
   if (NULL == self) {
     ret = -1;
@@ -180,7 +180,7 @@ static PyObject* mp_subscript(PyObject* self_in, PyObject* key) {
 
 static void tp_dealloc(PyObject* self_in) {
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
-  ColorSequence_deallocate_sequence(self);
+  deallocate_sequence(self);
   Py_TYPE(self)->tp_free(self);
 }
 
@@ -206,7 +206,7 @@ static int tp_init(PyObject* self_in, PyObject* args, PyObject* kwds) {
   size_t len = PyList_Size(colors_obj);
 
   // allocate memory for the sequence
-  ret = ColorSequence_allocate_sequence(self, len);
+  ret = allocate_sequence(self, len);
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);
     return -1;

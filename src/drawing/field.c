@@ -41,14 +41,14 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
     return NULL;
   }
 
-  size_t scalars = scalar_field_obj->_scalars_buffer.len / sizeof(double);
+  size_t scalars = scalar_field_obj->length;
   if (pixels > scalars) {
     PyErr_SetString(PyExc_ValueError, "scalars buffer is too small");
     return NULL;
   }
 
   ret = sicgl_scalar_field(
-      &self->interface, field_obj->screen, scalars, offset,
+      &self->interface, field_obj->screen, scalar_field_obj->scalars, offset,
       &color_sequence_obj->_sequence, interpolator_obj->fn);
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);
