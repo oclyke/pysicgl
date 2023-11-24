@@ -8,7 +8,7 @@
 #include "pysicgl/interface.h"
 #include "pysicgl/screen.h"
 #include "pysicgl/submodules/color.h"
-#include "pysicgl/submodules/compositors.h"
+#include "pysicgl/submodules/composition.h"
 #include "pysicgl/submodules/functional.h"
 #include "sicgl.h"
 
@@ -83,7 +83,7 @@ typedef struct _submodule_entry_t {
 } submodule_entry_t;
 static submodule_entry_t pysicgl_submodules[] = {
     {"color", PyInit_color},
-    {"compositors", PyInit_compositors},
+    {"composition", PyInit_composition},
     {"functional", PyInit_functional},
 };
 static size_t num_submodules =

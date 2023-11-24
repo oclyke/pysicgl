@@ -53,7 +53,7 @@ pysicgl_sources = list(
         "drawing/screen.c",
         "drawing/global.c",
         "submodules/color/module.c",
-        "submodules/compositors/module.c",
+        "submodules/composition/module.c",
         "submodules/functional/module.c",
         "color_sequence.c",
         "compositor.c",

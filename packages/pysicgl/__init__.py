@@ -1,7 +1,7 @@
 
 # modules
 from ._sicgl_core import color
-from ._sicgl_core import compositors
+from ._sicgl_core import composition
 from ._sicgl_core import functional
 
 # types

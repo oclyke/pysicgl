@@ -87,7 +87,7 @@ static PyModuleDef module = {
     NULL,
 };
 
-PyMODINIT_FUNC PyInit_compositors(void) {
+PyMODINIT_FUNC PyInit_composition(void) {
   // ensure that types are ready
   for (size_t idx = 0; idx < num_types; idx++) {
     type_entry_t entry = pysicgl_types[idx];
