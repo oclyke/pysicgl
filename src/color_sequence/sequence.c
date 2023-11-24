@@ -196,27 +196,27 @@ static int tp_init(PyObject* self_in, PyObject* args, PyObject* kwds) {
     return -1;
   }
 
-  // // ensure that the colors object is a list
-  // if (!PyList_Check(colors_obj)) {
-  //   PyErr_SetNone(PyExc_TypeError);
-  //   return -1;
-  // }
+  // ensure that the colors object is a list
+  if (!PyList_Check(colors_obj)) {
+    PyErr_SetNone(PyExc_TypeError);
+    return -1;
+  }
 
-  // // size of the sequence
-  // size_t len = PyList_Size(colors_obj);
+  // size of the sequence
+  size_t len = PyList_Size(colors_obj);
 
-  // // allocate memory for the sequence
-  // ret = ColorSequence_allocate_sequence(self, len);
-  // if (0 != ret) {
-  //   PyErr_SetNone(PyExc_OSError);
-  //   return -1;
-  // }
+  // allocate memory for the sequence
+  ret = ColorSequence_allocate_sequence(self, len);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return -1;
+  }
 
-  // // copy the colors into the sequence
-  // for (size_t idx = 0; idx < len; idx++) {
-  //   self->_sequence.colors[idx] =
-  //       PyLong_AsLong(PyList_GetItem(colors_obj, idx));
-  // }
+  // copy the colors into the sequence
+  for (size_t idx = 0; idx < len; idx++) {
+    self->_sequence.colors[idx] =
+        PyLong_AsLong(PyList_GetItem(colors_obj, idx));
+  }
 
   return ret;
 }
