@@ -2,7 +2,6 @@
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-// python includes must come first
 
 #include "sicgl/color_sequence.h"
 
