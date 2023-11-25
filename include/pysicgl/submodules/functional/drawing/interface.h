@@ -2,7 +2,9 @@
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-// python includes must come first
+
+PyObject* interface_compose(PyObject* self_in, PyObject* args);
+PyObject* interface_blit(PyObject* self_in, PyObject* args);
 
 PyObject* interface_fill(PyObject* self_in, PyObject* args);
 PyObject* interface_pixel(PyObject* self_in, PyObject* args);

@@ -6,7 +6,7 @@
 #include <errno.h>
 #include <stdio.h>
 
-#include "pysicgl/compositor.h"
+#include "pysicgl/types/compositor.h"
 #include "pysicgl/utilities.h"
 
 // fwd declarations

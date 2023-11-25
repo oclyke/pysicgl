@@ -2,12 +2,11 @@
 #include <Python.h>
 // python includes must come first
 
-#include "pysicgl/interface.h"
-#include "pysicgl/submodules/functional.h"
-#include "pysicgl/utilities.h"
-#include "sicgl/color.h"
+#include "pysicgl/submodules/functional/drawing/global.h"
+#include "pysicgl/submodules/functional/drawing/interface.h"
+#include "pysicgl/submodules/functional/drawing/screen.h"
+#include "pysicgl/types/interface.h"
 #include "sicgl/gamma.h"
-#include "sicgl/interface.h"
 
 /**
  * @brief Perform gamma correction on interface memory.
@@ -58,7 +57,7 @@ static PyObject* get_pixel_at_offset(PyObject* self, PyObject* args) {
     return NULL;
   }
 
-  return PyLong_FromPlatformColorT(color);
+  return PyLong_FromLong(color);
 }
 
 /**
@@ -85,7 +84,7 @@ static PyObject* get_pixel_at_coordinates(PyObject* self, PyObject* args) {
     return NULL;
   }
 
-  return PyLong_FromPlatformColorT(color);
+  return PyLong_FromLong(color);
 }
 
 static PyMethodDef funcs[] = {
@@ -95,6 +94,60 @@ static PyMethodDef funcs[] = {
      "Get the pixel color at the specified offset."},
     {"get_pixel_at_coordinates", (PyCFunction)get_pixel_at_coordinates,
      METH_VARARGS, "Get the pixel color at the specified coordinates."},
+
+    // interface relative drawing
+    {"interface_compose", (PyCFunction)interface_compose, METH_VARARGS,
+     "compose interface"},
+    {"interface_blit", (PyCFunction)interface_blit, METH_VARARGS,
+     "blit interface"},
+
+    {"interface_fill", (PyCFunction)interface_fill, METH_VARARGS,
+     "fill color into interface"},
+    {"interface_pixel", (PyCFunction)interface_pixel, METH_VARARGS,
+     "draw pixel to interface"},
+    {"interface_line", (PyCFunction)interface_line, METH_VARARGS,
+     "draw line to interface"},
+    {"interface_rectangle", (PyCFunction)interface_rectangle, METH_VARARGS,
+     "draw rectangle to interface"},
+    {"interface_rectangle_filled", (PyCFunction)interface_rectangle_filled,
+     METH_VARARGS, "draw filled rectangle to interface"},
+    {"interface_circle", (PyCFunction)interface_circle, METH_VARARGS,
+     "draw circle to interface"},
+    {"interface_ellipse", (PyCFunction)interface_ellipse, METH_VARARGS,
+     "draw ellipse to interface"},
+
+    // screen relative drawing
+    {"screen_fill", (PyCFunction)screen_fill, METH_VARARGS,
+     "fill color into screen"},
+    {"screen_pixel", (PyCFunction)screen_pixel, METH_VARARGS,
+     "draw pixel to screen"},
+    {"screen_line", (PyCFunction)screen_line, METH_VARARGS,
+     "draw line to screen"},
+    {"screen_rectangle", (PyCFunction)screen_rectangle, METH_VARARGS,
+     "draw rectangle to screen"},
+    {"screen_rectangle_filled", (PyCFunction)screen_rectangle_filled,
+     METH_VARARGS, "draw filled rectangle to screen"},
+    {"screen_circle", (PyCFunction)screen_circle, METH_VARARGS,
+     "draw circle to screen"},
+    {"screen_ellipse", (PyCFunction)screen_ellipse, METH_VARARGS,
+     "draw ellipse to screen"},
+
+    // global drawing
+    {"global_pixel", (PyCFunction)global_pixel, METH_VARARGS,
+     "Draw a pixel in global coordinates. Output clipped to interface."},
+    {"global_line", (PyCFunction)global_line, METH_VARARGS,
+     "Draw a line in global coordinates. Output clipped to interface."},
+    {"global_rectangle", (PyCFunction)global_rectangle, METH_VARARGS,
+     "Draw a rectangle in global coordinates. Output clipped to interface."},
+    {"global_rectangle_filled", (PyCFunction)global_rectangle_filled,
+     METH_VARARGS,
+     "Draw a filled rectangle in global coordinates. Output clipped to "
+     "interface."},
+    {"global_circle", (PyCFunction)global_circle, METH_VARARGS,
+     "Draw a circle in global coordinates. Output clipped to interface."},
+    {"global_ellipse", (PyCFunction)global_ellipse, METH_VARARGS,
+     "Draw an ellipse in global coordinates. Output clipped to interface."},
+
     {NULL},
 };
 

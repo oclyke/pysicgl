@@ -2,7 +2,7 @@
 #include <Python.h>
 // python includes must come first
 
-#include "pysicgl/compositor.h"
+#include "pysicgl/types/compositor.h"
 #include "sicgl/compositors.h"
 
 // collect type definitions for the module

@@ -6,10 +6,7 @@
 #include <errno.h>
 #include <stdio.h>
 
-#include "pysicgl/field.h"
-
-// utilities for C consumers
-////////////////////////////
+#include "pysicgl/types/scalar_field.h"
 
 /**
  * @brief Deallocate the scalars memory.
@@ -92,8 +89,7 @@ static int tp_init(PyObject* self_in, PyObject* args, PyObject* kwds) {
       NULL,
   };
   PyObject* scalars_obj;
-  if (!PyArg_ParseTupleAndKeywords(
-          args, kwds, "O", keywords, &scalars_obj)) {
+  if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", keywords, &scalars_obj)) {
     return -1;
   }
 

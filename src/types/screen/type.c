@@ -6,7 +6,7 @@
 #include <errno.h>
 #include <stdio.h>
 
-#include "pysicgl/screen.h"
+#include "pysicgl/types/screen.h"
 #include "pysicgl/utilities.h"
 
 // fwd declarations
@@ -142,7 +142,7 @@ static PyObject* set_corners(PyObject* self_in, PyObject* args) {
  * @param ref
  * @return PyObject*
  */
-ScreenObject* new_screen_object(screen_t* ref) {
+static ScreenObject* new_screen_object(screen_t* ref) {
   ScreenObject* self = (ScreenObject*)(ScreenType.tp_alloc(&ScreenType, 0));
   if (self != NULL) {
     if (NULL == ref) {

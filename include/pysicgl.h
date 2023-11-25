@@ -10,6 +10,6 @@
 #include "pysicgl/drawing/interface.h"
 #include "pysicgl/drawing/screen.h"
 #include "pysicgl/field.h"
-#include "pysicgl/interface.h"
+#include "pysicgl/types/interface.h
 #include "pysicgl/screen.h"
 #include "pysicgl/utilities.h"

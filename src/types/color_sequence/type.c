@@ -4,9 +4,9 @@
 
 #include <errno.h>
 
-#include "pysicgl/color_sequence/interpolator.h"
-#include "pysicgl/color_sequence/sequence.h"
 #include "pysicgl/submodules/color.h"
+#include "pysicgl/types/color_sequence.h"
+#include "pysicgl/types/color_sequence_interpolator.h"
 
 // fwd declarations
 static Py_ssize_t mp_length(PyObject* self_in);

@@ -4,7 +4,7 @@
 #include <Python.h>
 // python includes must come first
 
-#include "pysicgl/screen.h"
+#include "pysicgl/types/screen.h"
 #include "sicgl/interface.h"
 #include "sicgl/screen.h"
 

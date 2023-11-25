@@ -2,15 +2,17 @@
 #include <Python.h>
 // python includes must come first
 
-#include "pysicgl/color_sequence/sequence.h"
-#include "pysicgl/compositor.h"
-#include "pysicgl/field.h"
-#include "pysicgl/interface.h"
-#include "pysicgl/screen.h"
+#include "pysicgl/submodules/absolute.h"
 #include "pysicgl/submodules/color.h"
 #include "pysicgl/submodules/color_sequence/interpolation.h"
 #include "pysicgl/submodules/composition.h"
 #include "pysicgl/submodules/functional.h"
+#include "pysicgl/types/color_sequence.h"
+#include "pysicgl/types/color_sequence_interpolator.h"
+#include "pysicgl/types/compositor.h"
+#include "pysicgl/types/interface.h"
+#include "pysicgl/types/scalar_field.h"
+#include "pysicgl/types/screen.h"
 #include "sicgl.h"
 
 /**
@@ -87,6 +89,7 @@ static submodule_entry_t pysicgl_submodules[] = {
     {"color_sequence_interpolation", PyInit_color_sequence_interpolation},
     {"composition", PyInit_composition},
     {"functional", PyInit_functional},
+    // {"absolute", PyInit_absolute},
 };
 static size_t num_submodules =
     sizeof(pysicgl_submodules) / sizeof(submodule_entry_t);

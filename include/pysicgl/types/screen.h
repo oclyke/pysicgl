@@ -20,6 +20,3 @@ typedef struct {
   // a flag to explicitly indicate whether this is an object or reference
   bool _is_reference;
 } ScreenObject;
-
-// publicly accessible constructors
-ScreenObject* new_screen_object(screen_t* ref);

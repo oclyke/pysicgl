@@ -5,18 +5,14 @@
 #include <errno.h>
 #include <stdio.h>
 
-#include "pysicgl/drawing/blit.h"
-#include "pysicgl/drawing/compose.h"
-#include "pysicgl/drawing/field.h"
-#include "pysicgl/drawing/global.h"
-#include "pysicgl/drawing/interface.h"
-#include "pysicgl/drawing/screen.h"
-#include "pysicgl/interface.h"
-#include "pysicgl/screen.h"
-#include "pysicgl/utilities.h"
-#include "sicgl/color.h"
+#include "pysicgl/types/color_sequence.h"
+#include "pysicgl/types/color_sequence_interpolator.h"
+#include "pysicgl/types/compositor.h"
+#include "pysicgl/types/interface.h"
+#include "pysicgl/types/scalar_field.h"
+#include "sicgl/blit.h"
+#include "sicgl/domain/interface.h"
 #include "sicgl/gamma.h"
-#include "sicgl/interface.h"
 
 // utilities for C consumers
 ////////////////////////////
@@ -116,6 +112,20 @@ int Interface_set_memory(
 out:
   return ret;
 }
+
+// forward declarations
+static PyObject* scalar_field(
+    PyObject* self_in, PyObject* args, PyObject* kwds);
+static PyObject* compose(PyObject* self_in, PyObject* args);
+static PyObject* blit(PyObject* self_in, PyObject* args);
+
+static PyObject* fill(PyObject* self_in, PyObject* args);
+static PyObject* pixel(PyObject* self_in, PyObject* args);
+static PyObject* line(PyObject* self_in, PyObject* args);
+static PyObject* rectangle(PyObject* self_in, PyObject* args);
+static PyObject* rectangle_filled(PyObject* self_in, PyObject* args);
+static PyObject* circle(PyObject* self_in, PyObject* args);
+static PyObject* ellipse(PyObject* self_in, PyObject* args);
 
 // getset
 /////////
@@ -308,7 +318,7 @@ static PyObject* get_pixel_at_offset(PyObject* self_in, PyObject* args) {
     return NULL;
   }
 
-  return PyLong_FromPlatformColorT(color);
+  return PyLong_FromLong(color);
 }
 
 /**
@@ -333,59 +343,28 @@ static PyObject* get_pixel_at_coordinates(PyObject* self_in, PyObject* args) {
     return NULL;
   }
 
-  return PyLong_FromPlatformColorT(color);
+  return PyLong_FromLong(color);
 }
 
 static PyMethodDef tp_methods[] = {
+    {"scalar_field", (PyCFunction)scalar_field, METH_VARARGS | METH_KEYWORDS,
+     "map a scalar field onto the interface through a color sequence"},
     {"blit", (PyCFunction)blit, METH_VARARGS,
      "blit a sprite onto the interface memory directly"},
     {"compose", (PyCFunction)compose, METH_VARARGS,
      "compose a sprite onto the interface memory using a composition method"},
-    {"scalar_field", (PyCFunction)scalar_field, METH_VARARGS | METH_KEYWORDS,
-     "map a scalar field onto the interface through a color sequence"},
 
-    {"interface_fill", (PyCFunction)interface_fill, METH_VARARGS,
-     "fill color into interface"},
-    {"interface_pixel", (PyCFunction)interface_pixel, METH_VARARGS,
-     "draw pixel to interface"},
-    {"interface_line", (PyCFunction)interface_line, METH_VARARGS,
-     "draw line to interface"},
-    {"interface_rectangle", (PyCFunction)interface_rectangle, METH_VARARGS,
+    // drawing functions
+    {"fill", (PyCFunction)fill, METH_VARARGS, "fill color into interface"},
+    {"pixel", (PyCFunction)pixel, METH_VARARGS, "draw pixel to interface"},
+    {"line", (PyCFunction)line, METH_VARARGS, "draw line to interface"},
+    {"rectangle", (PyCFunction)rectangle, METH_VARARGS,
      "draw rectangle to interface"},
-    {"interface_rectangle_filled", (PyCFunction)interface_rectangle_filled,
-     METH_VARARGS, "draw filled rectangle to interface"},
-    {"interface_circle", (PyCFunction)interface_circle, METH_VARARGS,
-     "draw circle to interface"},
-    {"interface_ellipse", (PyCFunction)interface_ellipse, METH_VARARGS,
+    {"rectangle_filled", (PyCFunction)rectangle_filled, METH_VARARGS,
+     "draw filled rectangle to interface"},
+    {"circle", (PyCFunction)circle, METH_VARARGS, "draw circle to interface"},
+    {"ellipse", (PyCFunction)ellipse, METH_VARARGS,
      "draw ellipse to interface"},
-
-    {"screen_fill", (PyCFunction)screen_fill, METH_VARARGS,
-     "fill color into screen"},
-    {"screen_pixel", (PyCFunction)screen_pixel, METH_VARARGS,
-     "draw pixel to screen"},
-    {"screen_line", (PyCFunction)screen_line, METH_VARARGS,
-     "draw line to screen"},
-    {"screen_rectangle", (PyCFunction)screen_rectangle, METH_VARARGS,
-     "draw rectangle to screen"},
-    {"screen_rectangle_filled", (PyCFunction)screen_rectangle_filled,
-     METH_VARARGS, "draw filled rectangle to screen"},
-    {"screen_circle", (PyCFunction)screen_circle, METH_VARARGS,
-     "draw circle to screen"},
-    {"screen_ellipse", (PyCFunction)screen_ellipse, METH_VARARGS,
-     "draw ellipse to screen"},
-
-    {"global_pixel", (PyCFunction)global_pixel, METH_VARARGS,
-     "draw pixel to global"},
-    {"global_line", (PyCFunction)global_line, METH_VARARGS,
-     "draw line to global"},
-    {"global_rectangle", (PyCFunction)global_rectangle, METH_VARARGS,
-     "draw rectangle to global"},
-    {"global_rectangle_filled", (PyCFunction)global_rectangle_filled,
-     METH_VARARGS, "draw filled rectangle to global"},
-    {"global_circle", (PyCFunction)global_circle, METH_VARARGS,
-     "draw circle to global"},
-    {"global_ellipse", (PyCFunction)global_ellipse, METH_VARARGS,
-     "draw ellipse to global"},
 
     {"gamma_correct", (PyCFunction)gamma_correct, METH_VARARGS,
      "perform gamma correction on interface memory"},
@@ -414,3 +393,228 @@ PyTypeObject InterfaceType = {
     .tp_getset = tp_getset,
     .tp_methods = tp_methods,
 };
+
+PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
+  int ret = 0;
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  ScreenObject* field_obj;
+  ScalarFieldObject* scalar_field_obj;
+  ColorSequenceObject* color_sequence_obj;
+  ColorSequenceInterpolatorObject* interpolator_obj;
+  double offset = 0.0;
+  char* keywords[] = {
+      "field", "scalars", "color_sequence", "interpolator", "offset", NULL,
+  };
+  if (!PyArg_ParseTupleAndKeywords(
+          args, kwds, "O!O!O!O!|d", keywords, &ScreenType, &field_obj,
+          &ScalarFieldType, &scalar_field_obj, &ColorSequenceType,
+          &color_sequence_obj, &ColorSequenceInterpolatorType,
+          &interpolator_obj, &offset)) {
+    return NULL;
+  }
+
+  Py_INCREF(color_sequence_obj);
+  Py_INCREF(interpolator_obj);
+  Py_INCREF(scalar_field_obj);
+
+  // check length of scalars is sufficient for the field
+  size_t pixels;
+  ret = screen_get_num_pixels(field_obj->screen, &pixels);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  size_t scalars = scalar_field_obj->length;
+  if (pixels > scalars) {
+    PyErr_SetString(PyExc_ValueError, "scalars buffer is too small");
+    return NULL;
+  }
+
+  ret = sicgl_scalar_field(
+      &self->interface, field_obj->screen, scalar_field_obj->scalars, offset,
+      &color_sequence_obj->_sequence, interpolator_obj->fn);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  Py_DECREF(scalar_field_obj);
+  Py_DECREF(interpolator_obj);
+  Py_DECREF(color_sequence_obj);
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+static PyObject* compose(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  ScreenObject* screen;
+  Py_buffer sprite;
+  CompositorObject* compositor;
+  if (!PyArg_ParseTuple(
+          args, "O!y*O!", &ScreenType, &screen, &sprite, &CompositorType,
+          &compositor)) {
+    return NULL;
+  }
+
+  int ret = sicgl_compose(
+      &self->interface, screen->screen, sprite.buf, compositor->fn,
+      compositor->args);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+static PyObject* blit(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  ScreenObject* screen;
+  Py_buffer sprite;
+  if (!PyArg_ParseTuple(args, "O!y*", &ScreenType, &screen, &sprite)) {
+    return NULL;
+  }
+
+  int ret = sicgl_blit(&self->interface, screen->screen, sprite.buf);
+
+  PyBuffer_Release(&sprite);
+
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+static PyObject* fill(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  int color;
+  if (!PyArg_ParseTuple(args, "i", &color)) {
+    return NULL;
+  }
+
+  int ret = sicgl_interface_fill(&self->interface, color);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+static PyObject* pixel(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  int color;
+  ext_t u, v;
+  if (!PyArg_ParseTuple(args, "i(ii)", &color, &u, &v)) {
+    return NULL;
+  }
+
+  int ret = sicgl_interface_pixel(&self->interface, color, u, v);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+static PyObject* line(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  int color;
+  ext_t u0, v0, u1, v1;
+  if (!PyArg_ParseTuple(args, "i(ii)(ii)", &color, &u0, &v0, &u1, &v1)) {
+    return NULL;
+  }
+
+  int ret = sicgl_interface_line(&self->interface, color, u0, v0, u1, v1);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+static PyObject* rectangle(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  int color;
+  ext_t u0, v0, u1, v1;
+  if (!PyArg_ParseTuple(args, "i(ii)(ii)", &color, &u0, &v0, &u1, &v1)) {
+    return NULL;
+  }
+
+  int ret = sicgl_interface_rectangle(&self->interface, color, u0, v0, u1, v1);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+static PyObject* rectangle_filled(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  int color;
+  ext_t u0, v0, u1, v1;
+  if (!PyArg_ParseTuple(args, "i(ii)(ii)", &color, &u0, &v0, &u1, &v1)) {
+    return NULL;
+  }
+
+  int ret =
+      sicgl_interface_rectangle_filled(&self->interface, color, u0, v0, u1, v1);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+static PyObject* circle(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  int color;
+  ext_t u0, v0, diameter;
+  if (!PyArg_ParseTuple(args, "i(ii)i", &color, &u0, &v0, &diameter)) {
+    return NULL;
+  }
+
+  int ret =
+      sicgl_interface_circle_ellipse(&self->interface, color, u0, v0, diameter);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+static PyObject* ellipse(PyObject* self_in, PyObject* args) {
+  InterfaceObject* self = (InterfaceObject*)self_in;
+  int color;
+  ext_t u0, v0, semiu, semiv;
+  if (!PyArg_ParseTuple(args, "i(ii)(ii)", &color, &u0, &v0, &semiu, &semiv)) {
+    return NULL;
+  }
+
+  int ret =
+      sicgl_interface_ellipse(&self->interface, color, u0, v0, semiu, semiv);
+  if (0 != ret) {
+    PyErr_SetNone(PyExc_OSError);
+    return NULL;
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}

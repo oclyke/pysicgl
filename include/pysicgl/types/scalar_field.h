@@ -10,7 +10,6 @@
 extern PyTypeObject ScalarFieldType;
 
 typedef struct {
-  PyObject_HEAD 
-  double* scalars;
+  PyObject_HEAD double* scalars;
   size_t length;
 } ScalarFieldObject;

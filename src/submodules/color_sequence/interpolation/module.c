@@ -2,7 +2,7 @@
 #include <Python.h>
 // python includes must come first
 
-#include "pysicgl/color_sequence/interpolator.h"
+#include "pysicgl/types/color_sequence_interpolator.h"
 #include "sicgl/color_sequence.h"
 
 // collect type definitions for the module

@@ -8,5 +8,3 @@
 #include "sicgl/extent.h"
 
 // int unpack_ext_t_tuple2(PyObject* obj, ext_t* u, ext_t* v);
-
-PyLongObject* PyLong_FromPlatformColorT(color_t color);

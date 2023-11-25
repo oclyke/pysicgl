@@ -2,7 +2,7 @@
 #include <Python.h>
 // python includes must come first
 
-#include "pysicgl/color_sequence/interpolator.h"
+#include "pysicgl/types/color_sequence_interpolator.h"
 
 ColorSequenceInterpolatorObject* new_color_sequence_interpolator_object(
     sequence_map_fn fn, void* args) {
