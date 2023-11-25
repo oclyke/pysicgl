@@ -1,5 +1,5 @@
-import pytest
 import pysicgl
+from tests.testutils import vec_add
 
 
 def test_init_extent():
@@ -12,8 +12,6 @@ def test_init_extent():
 
 
 def test_init_normalization():
-    from testutils import vec_add
-
     extent = (20, 20)
     location = (1, 1)
 
