@@ -52,7 +52,9 @@ pysicgl_sources = list(
         "submodules/functional/drawing/global.c",
         "submodules/functional/drawing/interface.c",
         "submodules/functional/drawing/screen.c",
+        "submodules/functional/color_correction.c",
         "submodules/functional/module.c",
+        "submodules/functional/operations.c",
         "types/color_sequence/type.c",
         "types/color_sequence_interpolator/type.c",
         "types/compositor/type.c",
@@ -60,7 +62,6 @@ pysicgl_sources = list(
         "types/interface/type.c",
         "types/screen/type.c",
         "module.c",
-        "utilities.c",
     ]
 )
 

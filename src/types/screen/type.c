@@ -7,7 +7,6 @@
 #include <stdio.h>
 
 #include "pysicgl/types/screen.h"
-#include "pysicgl/utilities.h"
 
 // fwd declarations
 static PyObject* tp_new(PyTypeObject* type, PyObject* args, PyObject* kwds);

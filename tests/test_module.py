@@ -43,7 +43,7 @@ def test_gamma_correction():
   # test gamma correction for all values
   for idx in range(len(GAMMA_TABLE)):
     color = pysicgl.color.from_rgba((idx, idx, idx, idx))
-    display.pixel(color, (0, 0))
+    pysicgl.functional.interface_pixel(display, color, (0, 0))
 
     pysicgl.functional.gamma_correct(display, output)
 

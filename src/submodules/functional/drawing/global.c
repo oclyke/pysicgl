@@ -1,13 +1,8 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-// python includes must come first
 
-#include "pysicgl/types/color_sequence.h"
-#include "pysicgl/types/color_sequence_interpolator.h"
-#include "pysicgl/types/compositor.h"
 #include "pysicgl/types/interface.h"
-#include "pysicgl/types/scalar_field.h"
-#include "pysicgl/utilities.h"
+
 #include "sicgl/blit.h"
 #include "sicgl/domain/global.h"
 

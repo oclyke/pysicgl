@@ -1,37 +1,13 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-// python includes must come first
 
 #include "pysicgl/submodules/functional/drawing/global.h"
 #include "pysicgl/submodules/functional/drawing/interface.h"
 #include "pysicgl/submodules/functional/drawing/screen.h"
+#include "pysicgl/submodules/functional/color_correction.h"
+#include "pysicgl/submodules/functional/operations.h"
 #include "pysicgl/types/interface.h"
 #include "sicgl/gamma.h"
-
-/**
- * @brief Perform gamma correction on interface memory.
- *
- * @param self
- * @param args
- * @return PyObject* None.
- */
-static PyObject* gamma_correct(PyObject* self, PyObject* args) {
-  InterfaceObject* input;
-  InterfaceObject* output;
-  if (!PyArg_ParseTuple(
-          args, "O!O!", &InterfaceType, &input, &InterfaceType, &output)) {
-    return NULL;
-  }
-
-  int ret = sicgl_gamma_correct(&input->interface, &output->interface);
-  if (0 != ret) {
-    PyErr_SetNone(PyExc_OSError);
-    return NULL;
-  }
-
-  Py_INCREF(Py_None);
-  return Py_None;
-}
 
 /**
  * @brief Get the pixel color at the specified offset.
@@ -88,18 +64,26 @@ static PyObject* get_pixel_at_coordinates(PyObject* self, PyObject* args) {
 }
 
 static PyMethodDef funcs[] = {
-    {"gamma_correct", (PyCFunction)gamma_correct, METH_VARARGS,
-     "Perform gamma correction on interface memory."},
+
+    // utilities
     {"get_pixel_at_offset", (PyCFunction)get_pixel_at_offset, METH_VARARGS,
      "Get the pixel color at the specified offset."},
     {"get_pixel_at_coordinates", (PyCFunction)get_pixel_at_coordinates,
      METH_VARARGS, "Get the pixel color at the specified coordinates."},
 
+    // color correction
+    {"gamma_correct", (PyCFunction)gamma_correct, METH_VARARGS,
+     "Perform gamma correction on interface memory."},
+
+    // advanced operations
+    {"blit", (PyCFunction)blit, METH_VARARGS,
+     "blit a sprite onto the interface memory directly"},
+    {"compose", (PyCFunction)compose, METH_VARARGS,
+     "compose a sprite onto the interface memory using a composition method"},
+    {"scalar_field", (PyCFunction)scalar_field, METH_VARARGS | METH_KEYWORDS,
+     "map a scalar field onto the interface through a color sequence"},
+
     // interface relative drawing
-    {"interface_compose", (PyCFunction)interface_compose, METH_VARARGS,
-     "compose interface"},
-    {"interface_blit", (PyCFunction)interface_blit, METH_VARARGS,
-     "blit interface"},
 
     {"interface_fill", (PyCFunction)interface_fill, METH_VARARGS,
      "fill color into interface"},
