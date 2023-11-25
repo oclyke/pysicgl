@@ -2,11 +2,10 @@
 #include <Python.h>
 // python includes must come first
 
-#include "pysicgl/submodules/absolute.h"
 #include "pysicgl/submodules/color.h"
-#include "pysicgl/submodules/color_sequence/interpolation.h"
 #include "pysicgl/submodules/composition.h"
 #include "pysicgl/submodules/functional.h"
+#include "pysicgl/submodules/interpolation.h"
 #include "pysicgl/types/color_sequence.h"
 #include "pysicgl/types/color_sequence_interpolator.h"
 #include "pysicgl/types/compositor.h"
@@ -73,8 +72,11 @@ typedef struct _type_entry_t {
   PyTypeObject* type;
 } type_entry_t;
 static type_entry_t pysicgl_types[] = {
-    {"Interface", &InterfaceType},   {"ColorSequence", &ColorSequenceType},
-    {"Screen", &ScreenType},         {"ScalarField", &ScalarFieldType},
+    {"Interface", &InterfaceType},
+    {"ColorSequence", &ColorSequenceType},
+    {"ColorSequenceInterpolator", &ColorSequenceInterpolatorType},
+    {"Screen", &ScreenType},
+    {"ScalarField", &ScalarFieldType},
     {"Compositor", &CompositorType},
 };
 static size_t num_types = sizeof(pysicgl_types) / sizeof(type_entry_t);
@@ -86,10 +88,9 @@ typedef struct _submodule_entry_t {
 } submodule_entry_t;
 static submodule_entry_t pysicgl_submodules[] = {
     {"color", PyInit_color},
-    {"color_sequence_interpolation", PyInit_color_sequence_interpolation},
     {"composition", PyInit_composition},
     {"functional", PyInit_functional},
-    // {"absolute", PyInit_absolute},
+    {"interpolation", PyInit_interpolation},
 };
 static size_t num_submodules =
     sizeof(pysicgl_submodules) / sizeof(submodule_entry_t);

@@ -3,6 +3,7 @@
 from ._sicgl_core import color
 from ._sicgl_core import composition
 from ._sicgl_core import functional
+from ._sicgl_core import interpolation
 
 # types
 from ._sicgl_core import Interface, Screen, ColorSequence, Compositor

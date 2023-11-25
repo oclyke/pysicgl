@@ -5,15 +5,17 @@
 #include "pysicgl/types/color_sequence_interpolator.h"
 #include "sicgl/color_sequence.h"
 
-// collect type definitions for the module
-typedef struct _type_entry_t {
-  const char* name;
-  PyTypeObject* type;
-} type_entry_t;
-static type_entry_t pysicgl_types[] = {
-    {"ColorSequenceInterpolator", &ColorSequenceInterpolatorType},
+static PyModuleDef module = {
+    PyModuleDef_HEAD_INIT,
+    "interpolation",
+    "sicgl interpolation module",
+    -1,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
 };
-static size_t num_types = sizeof(pysicgl_types) / sizeof(type_entry_t);
 
 // collect interpolators for the module
 typedef struct _interpolator_entry_t {
@@ -33,31 +35,11 @@ static const interpolator_entry_t interpolators[] = {
 static const size_t num_interpolators =
     sizeof(interpolators) / sizeof(interpolator_entry_t);
 
-static PyModuleDef module = {
-    PyModuleDef_HEAD_INIT,
-    "compositors",
-    "sicgl compositors",
-    -1,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-};
-
-PyMODINIT_FUNC PyInit_color_sequence_interpolation(void) {
-  // ensure that types are ready
-  for (size_t idx = 0; idx < num_types; idx++) {
-    type_entry_t entry = pysicgl_types[idx];
-    if (PyType_Ready(entry.type) < 0) {
-      return NULL;
-    }
-  }
-
-  // create the module
+PyMODINIT_FUNC PyInit_interpolation(void) {
   PyObject* m = PyModule_Create(&module);
 
-  // create and register compositors
+  // create and register interpolators
+  PyType_Ready(&ColorSequenceInterpolatorType);
   for (size_t idx = 0; idx < num_interpolators; idx++) {
     interpolator_entry_t entry = interpolators[idx];
     ColorSequenceInterpolatorObject* obj =
