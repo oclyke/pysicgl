@@ -3,7 +3,6 @@
 // python includes must come first
 
 #include "pysicgl/submodules/color.h"
-
 #include "sicgl/color.h"
 
 /**

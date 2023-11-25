@@ -2,7 +2,6 @@
 #include <Python.h>
 
 #include "pysicgl/types/interface.h"
-
 #include "sicgl/gamma.h"
 
 /**

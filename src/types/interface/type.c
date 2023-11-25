@@ -270,7 +270,6 @@ static int tp_init(PyObject* self_in, PyObject* args, PyObject* kwds) {
   return 0;
 }
 
-
 static PyGetSetDef tp_getset[] = {
     {"screen", get_screen, set_screen, "screen definition", NULL},
     {"memory", get_memory, set_memory, "pixel memory", NULL},
