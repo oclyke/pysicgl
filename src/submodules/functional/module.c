@@ -2,6 +2,7 @@
 #include <Python.h>
 
 #include "pysicgl/submodules/functional/color_correction.h"
+#include "pysicgl/submodules/functional/color.h"
 #include "pysicgl/submodules/functional/drawing/global.h"
 #include "pysicgl/submodules/functional/drawing/interface.h"
 #include "pysicgl/submodules/functional/drawing/screen.h"
@@ -70,6 +71,12 @@ static PyMethodDef funcs[] = {
      "Get the pixel color at the specified offset."},
     {"get_pixel_at_coordinates", (PyCFunction)get_pixel_at_coordinates,
      METH_VARARGS, "Get the pixel color at the specified coordinates."},
+
+    // color utilities
+    {"color_from_rgba", (PyCFunction)color_from_rgba, METH_VARARGS,
+     "Return the color comprised of the RGBA input 4-tuple."},
+    {"color_to_rgba", (PyCFunction)color_to_rgba, METH_VARARGS,
+     "Return the individual RGBA components of the input color as a 4-tuple."},
 
     // color correction
     {"gamma_correct", (PyCFunction)gamma_correct, METH_VARARGS,

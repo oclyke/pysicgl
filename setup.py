@@ -46,11 +46,11 @@ pysicgl_include_dirs = list(
 pysicgl_sources = list(
     str(PurePath(pysicgl_root_dir, "src", source))
     for source in [
-        "submodules/color/module.c",
         "submodules/composition/module.c",
         "submodules/functional/drawing/global.c",
         "submodules/functional/drawing/interface.c",
         "submodules/functional/drawing/screen.c",
+        "submodules/functional/color.c",
         "submodules/functional/color_correction.c",
         "submodules/functional/module.c",
         "submodules/functional/operations.c",
@@ -66,7 +66,7 @@ pysicgl_sources = list(
 )
 
 sicgl_core = Extension(
-    "pysicgl._sicgl_core",
+    "pysicgl._core",
     include_dirs=[*pysicgl_include_dirs, *sicgl_include_dirs],
     sources=[*pysicgl_sources, *sicgl_sources],
 )

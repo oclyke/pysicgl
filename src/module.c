@@ -87,7 +87,6 @@ typedef struct _submodule_entry_t {
   PyObject* (*init)(void);
 } submodule_entry_t;
 static submodule_entry_t pysicgl_submodules[] = {
-    {"color", PyInit_color},
     {"composition", PyInit_composition},
     {"functional", PyInit_functional},
     {"interpolation", PyInit_interpolation},
@@ -95,7 +94,7 @@ static submodule_entry_t pysicgl_submodules[] = {
 static size_t num_submodules =
     sizeof(pysicgl_submodules) / sizeof(submodule_entry_t);
 
-PyMODINIT_FUNC PyInit__sicgl_core(void) {
+PyMODINIT_FUNC PyInit__core(void) {
   // ensure that types are ready
   for (size_t idx = 0; idx < num_types; idx++) {
     type_entry_t entry = pysicgl_types[idx];
