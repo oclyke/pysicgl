@@ -1,5 +1,6 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+// python includes first (clang-format)
 
 #include "pysicgl/submodules/functional/color.h"
 #include "pysicgl/submodules/functional/color_correction.h"
@@ -79,6 +80,10 @@ static PyMethodDef funcs[] = {
      "Return the color comprised of the RGBA input 4-tuple."},
     {"color_to_rgba", (PyCFunction)color_to_rgba, METH_VARARGS,
      "Return the individual RGBA components of the input color as a 4-tuple."},
+    {"interpolate_color_sequence", (PyCFunction)interpolate_color_sequence,
+     METH_VARARGS | METH_KEYWORDS,
+     "Interpolate the color sequence at one or more points using the given "
+     "interpolation type."},
 
     // color correction
     {"gamma_correct", (PyCFunction)gamma_correct, METH_VARARGS,

@@ -2,6 +2,7 @@
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+// python includes first (clang-format)
 
 PyObject* interface_compose(PyObject* self_in, PyObject* args);
 PyObject* interface_blit(PyObject* self_in, PyObject* args);

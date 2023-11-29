@@ -1,10 +1,10 @@
 #define PY_SSIZE_T_CLEAN
-#include "sicgl/domain/global.h"
-
 #include <Python.h>
+// python includes first (clang-format)
 
 #include "pysicgl/types/interface.h"
 #include "sicgl/blit.h"
+#include "sicgl/domain/global.h"
 
 PyObject* global_pixel(PyObject* self_in, PyObject* args) {
   (void)self_in;

@@ -2,6 +2,7 @@
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+// python includes first (clang-format)
 
 PyObject* global_pixel(PyObject* self_in, PyObject* args);
 PyObject* global_line(PyObject* self_in, PyObject* args);

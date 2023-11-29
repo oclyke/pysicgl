@@ -2,7 +2,7 @@
 
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-// python includes must come first
+// python includes first (clang-format)
 
 #include "pysicgl/types/screen.h"
 #include "sicgl/interface.h"

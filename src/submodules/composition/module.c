@@ -1,6 +1,6 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-// python includes must come first
+// python includes first (clang-format)
 
 #include "pysicgl/types/compositor.h"
 #include "sicgl/compositors.h"

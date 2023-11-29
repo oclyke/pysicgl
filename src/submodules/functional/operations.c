@@ -1,5 +1,6 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+// python includes first (clang-format)
 
 #include "pysicgl/types/color_sequence.h"
 #include "pysicgl/types/color_sequence_interpolator.h"
@@ -36,22 +37,18 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
   ScreenObject* field_obj;
   ScalarFieldObject* scalar_field_obj;
   ColorSequenceObject* color_sequence_obj;
-  ColorSequenceInterpolatorObject* interpolator_obj;
   double offset = 0.0;
   char* keywords[] = {
-      "interface",    "field",  "scalars", "color_sequence",
-      "interpolator", "offset", NULL,
+      "interface", "screen", "scalar_field", "color_sequence", "offset", NULL,
   };
   if (!PyArg_ParseTupleAndKeywords(
-          args, kwds, "O!O!O!O!O!|d", keywords, &InterfaceType, &interface_obj,
+          args, kwds, "O!O!O!O!|d", keywords, &InterfaceType, &interface_obj,
           &ScreenType, &field_obj, &ScalarFieldType, &scalar_field_obj,
-          &ColorSequenceType, &color_sequence_obj,
-          &ColorSequenceInterpolatorType, &interpolator_obj, &offset)) {
+          &ColorSequenceType, &color_sequence_obj, &offset)) {
     return NULL;
   }
 
   Py_INCREF(color_sequence_obj);
-  Py_INCREF(interpolator_obj);
   Py_INCREF(scalar_field_obj);
 
   // check length of scalars is sufficient for the field
@@ -68,6 +65,8 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
     return NULL;
   }
 
+  ColorSequenceInterpolatorObject* interpolator_obj =
+      color_sequence_obj->interpolator;
   ret = sicgl_scalar_field(
       &interface_obj->interface, field_obj->screen, scalar_field_obj->scalars,
       offset, &color_sequence_obj->sequence, interpolator_obj->fn);
@@ -77,7 +76,6 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
   }
 
   Py_DECREF(scalar_field_obj);
-  Py_DECREF(interpolator_obj);
   Py_DECREF(color_sequence_obj);
 
   Py_INCREF(Py_None);

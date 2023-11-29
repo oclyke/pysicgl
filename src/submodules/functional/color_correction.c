@@ -1,5 +1,6 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
+// python includes first (clang-format)
 
 #include "pysicgl/types/interface.h"
 #include "sicgl/gamma.h"

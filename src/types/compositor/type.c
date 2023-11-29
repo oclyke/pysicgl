@@ -1,7 +1,7 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <structmember.h>
-// python includes must come first
+// python includes first (clang-format)
 
 #include <errno.h>
 #include <stdio.h>
