@@ -6,6 +6,7 @@
 #include "sicgl/domain/screen.h"
 
 PyObject* screen_fill(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   ScreenObject* screen_obj;
   int color;
@@ -27,6 +28,7 @@ PyObject* screen_fill(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* screen_pixel(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   ScreenObject* screen_obj;
   int color;
@@ -49,6 +51,7 @@ PyObject* screen_pixel(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* screen_line(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   ScreenObject* screen_obj;
   int color;
@@ -71,6 +74,7 @@ PyObject* screen_line(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* screen_rectangle(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   ScreenObject* screen_obj;
   int color;
@@ -93,6 +97,7 @@ PyObject* screen_rectangle(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* screen_rectangle_filled(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   ScreenObject* screen_obj;
   int color;
@@ -115,6 +120,7 @@ PyObject* screen_rectangle_filled(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* screen_circle(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   ScreenObject* screen_obj;
   int color;
@@ -137,6 +143,7 @@ PyObject* screen_circle(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* screen_ellipse(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   ScreenObject* screen_obj;
   int color;

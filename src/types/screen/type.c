@@ -13,37 +13,45 @@ static PyObject* tp_new(PyTypeObject* type, PyObject* args, PyObject* kwds);
 
 // getset
 static PyObject* get_width(PyObject* self_in, void* closure) {
+  (void)closure;
   return PyLong_FromLong(((ScreenObject*)self_in)->screen->width);
 }
 static PyObject* get_height(PyObject* self_in, void* closure) {
+  (void)closure;
   return PyLong_FromLong(((ScreenObject*)self_in)->screen->height);
 }
 static PyObject* get_pixels(PyObject* self_in, void* closure) {
+  (void)closure;
   ScreenObject* self = (ScreenObject*)self_in;
   return PyLong_FromLong(self->screen->width * self->screen->height);
 }
 static PyObject* get_corners(PyObject* self_in, void* closure) {
+  (void)closure;
   ScreenObject* self = (ScreenObject*)self_in;
   return Py_BuildValue(
       "(ii)(ii)", self->screen->u0, self->screen->v0, self->screen->u1,
       self->screen->v1);
 }
 static PyObject* get_global_corners(PyObject* self_in, void* closure) {
+  (void)closure;
   ScreenObject* self = (ScreenObject*)self_in;
   return Py_BuildValue(
       "(ii)(ii)", self->screen->_gu0, self->screen->_gv0, self->screen->_gu1,
       self->screen->_gv1);
 }
 static PyObject* get_extent(PyObject* self_in, void* closure) {
+  (void)closure;
   ScreenObject* self = (ScreenObject*)self_in;
   return Py_BuildValue("(ii)", self->screen->width, self->screen->height);
 }
 static PyObject* get_location(PyObject* self_in, void* closure) {
+  (void)closure;
   ScreenObject* self = (ScreenObject*)self_in;
   return Py_BuildValue("(ii)", self->screen->lu, self->screen->lv);
 }
 
 static int set_extent(PyObject* self_in, PyObject* val, void* closure) {
+  (void)closure;
   ScreenObject* self = (ScreenObject*)self_in;
   ext_t width, height;
   if (!PyArg_ParseTuple(val, "(ii)", &width, &height)) {
@@ -60,6 +68,7 @@ static int set_extent(PyObject* self_in, PyObject* val, void* closure) {
 }
 
 static int set_location(PyObject* self_in, PyObject* val, void* closure) {
+  (void)closure;
   ScreenObject* self = (ScreenObject*)self_in;
 
   ext_t lu, lv;
@@ -78,6 +87,7 @@ static int set_location(PyObject* self_in, PyObject* val, void* closure) {
 
 // methods
 static PyObject* intersect(PyObject* self, PyObject* args) {
+  (void)self;
   PyObject* _s0;
   PyObject* _s1;
   if (!PyArg_ParseTuple(args, "O!O!", &ScreenType, &_s0, &ScreenType, &_s1)) {
@@ -100,6 +110,7 @@ static PyObject* intersect(PyObject* self, PyObject* args) {
 }
 
 static PyObject* normalize(PyObject* self_in, PyObject* args) {
+  (void)args;
   ScreenObject* self = (ScreenObject*)self_in;
   int ret = screen_normalize(self->screen);
   if (0 != ret) {
@@ -172,6 +183,9 @@ static ScreenObject* new_screen_object(screen_t* ref) {
  * @return PyObject*
  */
 static PyObject* tp_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
+  (void)type;
+  (void)args;
+  (void)kwds;
   ScreenObject* self = new_screen_object(NULL);
   return (PyObject*)self;
 }

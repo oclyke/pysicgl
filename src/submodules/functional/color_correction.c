@@ -12,6 +12,7 @@
  * @return PyObject* None.
  */
 PyObject* gamma_correct(PyObject* self, PyObject* args) {
+  (void)self;
   InterfaceObject* input;
   InterfaceObject* output;
   if (!PyArg_ParseTuple(

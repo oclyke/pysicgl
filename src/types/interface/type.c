@@ -113,20 +113,6 @@ out:
   return ret;
 }
 
-// forward declarations
-static PyObject* scalar_field(
-    PyObject* self_in, PyObject* args, PyObject* kwds);
-static PyObject* compose(PyObject* self_in, PyObject* args);
-static PyObject* blit(PyObject* self_in, PyObject* args);
-
-static PyObject* fill(PyObject* self_in, PyObject* args);
-static PyObject* pixel(PyObject* self_in, PyObject* args);
-static PyObject* line(PyObject* self_in, PyObject* args);
-static PyObject* rectangle(PyObject* self_in, PyObject* args);
-static PyObject* rectangle_filled(PyObject* self_in, PyObject* args);
-static PyObject* circle(PyObject* self_in, PyObject* args);
-static PyObject* ellipse(PyObject* self_in, PyObject* args);
-
 // getset
 /////////
 
@@ -141,6 +127,7 @@ static PyObject* ellipse(PyObject* self_in, PyObject* args);
  *  screen object.
  */
 static PyObject* get_screen(PyObject* self_in, void* closure) {
+  (void)closure;
   InterfaceObject* self = (InterfaceObject*)self_in;
   // it is important to return a NEW REFERENCE to the object,
   // otherwise its reference count will be deleted by the caller
@@ -160,6 +147,7 @@ static PyObject* get_screen(PyObject* self_in, void* closure) {
  *  memoryview of the memory buffer.
  */
 static PyObject* get_memory(PyObject* self_in, void* closure) {
+  (void)closure;
   InterfaceObject* self = (InterfaceObject*)self_in;
   return PyMemoryView_FromBuffer(&self->_memory_buffer);
 }
@@ -176,6 +164,7 @@ static PyObject* get_memory(PyObject* self_in, void* closure) {
  *  object and releases any existing screen object.
  */
 static int set_screen(PyObject* self_in, PyObject* value, void* closure) {
+  (void)closure;
   int ret = 0;
   InterfaceObject* self = (InterfaceObject*)self_in;
   if (!PyObject_IsInstance((PyObject*)value, (PyObject*)&ScreenType)) {
@@ -211,6 +200,7 @@ out:
  *  count.
  */
 static int set_memory(PyObject* self_in, PyObject* value, void* closure) {
+  (void)closure;
   int ret = 0;
   InterfaceObject* self = (InterfaceObject*)self_in;
   if (!PyObject_IsInstance((PyObject*)value, (PyObject*)&PyByteArray_Type)) {

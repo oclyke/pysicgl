@@ -1,15 +1,5 @@
 import pysicgl
 
-
-def test_initialization():
-    compositor = pysicgl.Compositor()
-
-
-def test_type():
-    compositor = pysicgl.Compositor()
-    assert isinstance(compositor, pysicgl.Compositor)
-
-
 def test_builtin_compositors():
     expected_compositors = (
         "DIRECT_SET",

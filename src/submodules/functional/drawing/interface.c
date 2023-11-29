@@ -7,6 +7,7 @@
 #include "sicgl/domain/interface.h"
 
 PyObject* interface_fill(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   if (!PyArg_ParseTuple(args, "O!i", &InterfaceType, &interface_obj, &color)) {
@@ -24,6 +25,7 @@ PyObject* interface_fill(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* interface_pixel(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u, v;
@@ -43,6 +45,7 @@ PyObject* interface_pixel(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* interface_line(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u0, v0, u1, v1;
@@ -64,6 +67,7 @@ PyObject* interface_line(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* interface_rectangle(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u0, v0, u1, v1;
@@ -85,6 +89,7 @@ PyObject* interface_rectangle(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* interface_rectangle_filled(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u0, v0, u1, v1;
@@ -106,6 +111,7 @@ PyObject* interface_rectangle_filled(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* interface_circle(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u0, v0, diameter;
@@ -127,6 +133,7 @@ PyObject* interface_circle(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* interface_ellipse(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u0, v0, semiu, semiv;

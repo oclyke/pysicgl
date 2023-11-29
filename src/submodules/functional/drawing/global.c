@@ -7,6 +7,7 @@
 #include "sicgl/blit.h"
 
 PyObject* global_pixel(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u, v;
@@ -26,6 +27,7 @@ PyObject* global_pixel(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* global_line(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u0, v0, u1, v1;
@@ -46,6 +48,7 @@ PyObject* global_line(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* global_rectangle(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u0, v0, u1, v1;
@@ -67,6 +70,7 @@ PyObject* global_rectangle(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* global_rectangle_filled(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u0, v0, u1, v1;
@@ -88,6 +92,7 @@ PyObject* global_rectangle_filled(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* global_circle(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u0, v0, diameter;
@@ -109,6 +114,7 @@ PyObject* global_circle(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* global_ellipse(PyObject* self_in, PyObject* args) {
+  (void)self_in;
   InterfaceObject* interface_obj;
   int color;
   ext_t u0, v0, semiu, semiv;

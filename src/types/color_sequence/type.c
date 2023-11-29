@@ -82,7 +82,6 @@ static PyObject* interpolate(
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
   PyObject* samples_obj;
   ColorSequenceInterpolatorObject* interpolator_obj;
-  unsigned int interp_type = 0;
   char* keywords[] = {
       "samples",
       "interpolator",
@@ -178,6 +177,26 @@ static PyObject* mp_subscript(PyObject* self_in, PyObject* key) {
   return PyLong_FromLong(self->_sequence.colors[PyLong_AsLong(key)]);
 }
 
+static PyObject* tp_iter(PyObject* self_in) {
+  ColorSequenceObject* self = (ColorSequenceObject*)self_in;
+  self->iterator_index = 0;
+  Py_INCREF(self);
+  return self_in;
+}
+
+static PyObject* tp_iternext(PyObject* self_in) {
+  ColorSequenceObject* self = (ColorSequenceObject*)self_in;
+  if (self->iterator_index < self->_sequence.length) {
+    PyObject* item = PyLong_FromLong(self->_sequence.colors[self->iterator_index]);
+    self->iterator_index++;
+    return item;
+  } else {
+    // No more items. Raise StopIteration
+    PyErr_SetNone(PyExc_StopIteration);
+    return NULL;
+  }
+}
+
 static void tp_dealloc(PyObject* self_in) {
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
   deallocate_sequence(self);
@@ -222,7 +241,7 @@ static int tp_init(PyObject* self_in, PyObject* args, PyObject* kwds) {
 }
 
 static PyMethodDef tp_methods[] = {
-    {"interpolate", (PyCFunctionWithKeywords)interpolate,
+    {"interpolate", (PyCFunction)interpolate,
      METH_VARARGS | METH_KEYWORDS,
      "interpolate the color sequence at one or more points using the given "
      "interpolation type"},
@@ -245,4 +264,6 @@ PyTypeObject ColorSequenceType = {
     .tp_init = tp_init,
     .tp_methods = tp_methods,
     .tp_as_mapping = &tp_as_mapping,
+    .tp_iter = tp_iter,
+    .tp_iternext = tp_iternext,
 };

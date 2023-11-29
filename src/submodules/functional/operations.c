@@ -34,7 +34,7 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
   Py_INCREF(scalar_field_obj);
 
   // check length of scalars is sufficient for the field
-  size_t pixels;
+  uint32_t pixels;
   ret = screen_get_num_pixels(field_obj->screen, &pixels);
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);

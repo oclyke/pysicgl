@@ -22,6 +22,8 @@
  * @return PyObject* Number of bytes per pixel.
  */
 static PyObject* get_bytes_per_pixel(PyObject* self, PyObject* args) {
+  (void)self;
+  (void)args;
   return PyLong_FromSize_t(bytes_per_pixel());
 }
 
@@ -34,6 +36,7 @@ static PyObject* get_bytes_per_pixel(PyObject* self, PyObject* args) {
  * @return PyObject* Allocated memory as a bytearray.
  */
 static PyObject* allocate_pixel_memory(PyObject* self, PyObject* pixels_in) {
+  (void)self;
   size_t pixels;
   if (PyLong_Check(pixels_in)) {
     pixels = PyLong_AsSize_t(pixels_in);

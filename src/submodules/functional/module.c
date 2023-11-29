@@ -20,6 +20,7 @@
  * @return PyObject* the pixel color as an integer.
  */
 static PyObject* get_pixel_at_offset(PyObject* self, PyObject* args) {
+  (void)self;
   InterfaceObject* interface_obj;
   int offset;
   if (!PyArg_ParseTuple(args, "O!i", &InterfaceType, &interface_obj, &offset)) {
@@ -46,6 +47,7 @@ static PyObject* get_pixel_at_offset(PyObject* self, PyObject* args) {
  * - coordinates_obj: The coordinates tuple (u, v).
  */
 static PyObject* get_pixel_at_coordinates(PyObject* self, PyObject* args) {
+  (void)self;
   InterfaceObject* interface_obj;
   ext_t u;
   ext_t v;

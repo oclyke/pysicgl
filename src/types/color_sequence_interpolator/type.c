@@ -17,12 +17,6 @@ ColorSequenceInterpolatorObject* new_color_sequence_interpolator_object(
   return self;
 }
 
-static PyObject* tp_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
-  ColorSequenceInterpolatorObject* self =
-      new_color_sequence_interpolator_object(NULL, NULL);
-  return (PyObject*)self;
-}
-
 PyTypeObject ColorSequenceInterpolatorType = {
     PyVarObject_HEAD_INIT(NULL, 0).tp_name =
         "_sicgl_core.ColorSequenceInterpolator",
@@ -30,5 +24,4 @@ PyTypeObject ColorSequenceInterpolatorType = {
     .tp_basicsize = sizeof(ColorSequenceInterpolatorObject),
     .tp_itemsize = 0,
     .tp_flags = Py_TPFLAGS_DEFAULT,
-    .tp_new = PyType_GenericNew,
 };

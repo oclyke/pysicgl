@@ -4,6 +4,7 @@
 #include "sicgl/color.h"
 
 PyObject* color_to_rgba(PyObject* self, PyObject* args) {
+  (void)self;
   PyObject* obj;
   if (!PyArg_ParseTuple(args, "O", &obj)) {
     return NULL;
@@ -18,6 +19,7 @@ PyObject* color_to_rgba(PyObject* self, PyObject* args) {
 }
 
 PyObject* color_from_rgba(PyObject* self, PyObject* args) {
+  (void)self;
   PyObject* obj;
   if (!PyArg_ParseTuple(args, "O", &obj)) {
     return NULL;
