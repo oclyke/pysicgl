@@ -1,3 +1,5 @@
+![popsicgl](./docs/assets/popsicgl.WEBP)
+
 # pysicgl
 
 pysicgl is a Python C extension interface for the [sicgl](https://github.com/oclyke/sicgl) graphics library.
