@@ -187,7 +187,8 @@ static PyObject* tp_iter(PyObject* self_in) {
 static PyObject* tp_iternext(PyObject* self_in) {
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
   if (self->iterator_index < self->_sequence.length) {
-    PyObject* item = PyLong_FromLong(self->_sequence.colors[self->iterator_index]);
+    PyObject* item =
+        PyLong_FromLong(self->_sequence.colors[self->iterator_index]);
     self->iterator_index++;
     return item;
   } else {
@@ -241,8 +242,7 @@ static int tp_init(PyObject* self_in, PyObject* args, PyObject* kwds) {
 }
 
 static PyMethodDef tp_methods[] = {
-    {"interpolate", (PyCFunction)interpolate,
-     METH_VARARGS | METH_KEYWORDS,
+    {"interpolate", (PyCFunction)interpolate, METH_VARARGS | METH_KEYWORDS,
      "interpolate the color sequence at one or more points using the given "
      "interpolation type"},
     {NULL},

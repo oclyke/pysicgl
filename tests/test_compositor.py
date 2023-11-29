@@ -1,5 +1,6 @@
 import pysicgl
 
+
 def test_builtin_compositors():
     expected_compositors = (
         "DIRECT_SET",

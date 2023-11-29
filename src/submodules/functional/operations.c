@@ -39,13 +39,14 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
   ColorSequenceInterpolatorObject* interpolator_obj;
   double offset = 0.0;
   char* keywords[] = {
-      "interface", "field", "scalars", "color_sequence", "interpolator", "offset", NULL,
+      "interface",    "field",  "scalars", "color_sequence",
+      "interpolator", "offset", NULL,
   };
   if (!PyArg_ParseTupleAndKeywords(
-          args, kwds, "O!O!O!O!O!|d", keywords, &InterfaceType, &interface_obj, &ScreenType, &field_obj,
-          &ScalarFieldType, &scalar_field_obj, &ColorSequenceType,
-          &color_sequence_obj, &ColorSequenceInterpolatorType,
-          &interpolator_obj, &offset)) {
+          args, kwds, "O!O!O!O!O!|d", keywords, &InterfaceType, &interface_obj,
+          &ScreenType, &field_obj, &ScalarFieldType, &scalar_field_obj,
+          &ColorSequenceType, &color_sequence_obj,
+          &ColorSequenceInterpolatorType, &interpolator_obj, &offset)) {
     return NULL;
   }
 
@@ -68,8 +69,8 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
   }
 
   ret = sicgl_scalar_field(
-      &interface_obj->interface, field_obj->screen, scalar_field_obj->scalars, offset,
-      &color_sequence_obj->_sequence, interpolator_obj->fn);
+      &interface_obj->interface, field_obj->screen, scalar_field_obj->scalars,
+      offset, &color_sequence_obj->_sequence, interpolator_obj->fn);
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
@@ -90,8 +91,8 @@ PyObject* compose(PyObject* self_in, PyObject* args) {
   Py_buffer sprite;
   CompositorObject* compositor;
   if (!PyArg_ParseTuple(
-          args, "O!O!y*O!", &InterfaceType, &interface_obj, &ScreenType, &screen, &sprite, &CompositorType,
-          &compositor)) {
+          args, "O!O!y*O!", &InterfaceType, &interface_obj, &ScreenType,
+          &screen, &sprite, &CompositorType, &compositor)) {
     return NULL;
   }
 
@@ -112,7 +113,9 @@ PyObject* blit(PyObject* self_in, PyObject* args) {
   InterfaceObject* interface_obj;
   ScreenObject* screen;
   Py_buffer sprite;
-  if (!PyArg_ParseTuple(args, "O!O!y*", &InterfaceType, &interface_obj, &ScreenType, &screen, &sprite)) {
+  if (!PyArg_ParseTuple(
+          args, "O!O!y*", &InterfaceType, &interface_obj, &ScreenType, &screen,
+          &sprite)) {
     return NULL;
   }
 
@@ -133,7 +136,8 @@ PyObject* scale(PyObject* self_in, PyObject* args) {
   (void)self_in;
   InterfaceObject* interface_obj;
   double fraction;
-  if (!PyArg_ParseTuple(args, "O!d", &InterfaceType, &interface_obj, &fraction)) {
+  if (!PyArg_ParseTuple(
+          args, "O!d", &InterfaceType, &interface_obj, &fraction)) {
     return NULL;
   }
   color_t* memory = interface_obj->interface.memory;

@@ -1,7 +1,7 @@
 #define PY_SSIZE_T_CLEAN
-#include <Python.h>
-
 #include "sicgl/color.h"
+
+#include <Python.h>
 
 PyObject* color_to_rgba(PyObject* self, PyObject* args) {
   (void)self;

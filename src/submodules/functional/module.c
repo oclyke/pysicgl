@@ -1,8 +1,8 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-#include "pysicgl/submodules/functional/color_correction.h"
 #include "pysicgl/submodules/functional/color.h"
+#include "pysicgl/submodules/functional/color_correction.h"
 #include "pysicgl/submodules/functional/drawing/global.h"
 #include "pysicgl/submodules/functional/drawing/interface.h"
 #include "pysicgl/submodules/functional/drawing/screen.h"
