@@ -10,19 +10,39 @@
 #include "sicgl/compose.h"
 #include "sicgl/gamma.h"
 
+static inline color_t clamp_u8(color_t channel) {
+  if (channel > 255) {
+    return 255;
+  } else if (channel < 0) {
+    return 0;
+  } else {
+    return channel;
+  }
+}
+
+static inline color_t color_scale(color_t color, double scale) {
+  // scales only the color components, alpha channel is untouched
+  return color_from_channels(
+      clamp_u8((color_t)(color_channel_red(color) * scale)),
+      clamp_u8((color_t)(color_channel_green(color) * scale)),
+      clamp_u8((color_t)(color_channel_blue(color) * scale)),
+      color_channel_alpha(color));
+}
+
 PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
+  (void)self_in;
   int ret = 0;
-  InterfaceObject* self = (InterfaceObject*)self_in;
+  InterfaceObject* interface_obj;
   ScreenObject* field_obj;
   ScalarFieldObject* scalar_field_obj;
   ColorSequenceObject* color_sequence_obj;
   ColorSequenceInterpolatorObject* interpolator_obj;
   double offset = 0.0;
   char* keywords[] = {
-      "field", "scalars", "color_sequence", "interpolator", "offset", NULL,
+      "interface", "field", "scalars", "color_sequence", "interpolator", "offset", NULL,
   };
   if (!PyArg_ParseTupleAndKeywords(
-          args, kwds, "O!O!O!O!|d", keywords, &ScreenType, &field_obj,
+          args, kwds, "O!O!O!O!O!|d", keywords, &InterfaceType, &interface_obj, &ScreenType, &field_obj,
           &ScalarFieldType, &scalar_field_obj, &ColorSequenceType,
           &color_sequence_obj, &ColorSequenceInterpolatorType,
           &interpolator_obj, &offset)) {
@@ -48,7 +68,7 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
   }
 
   ret = sicgl_scalar_field(
-      &self->interface, field_obj->screen, scalar_field_obj->scalars, offset,
+      &interface_obj->interface, field_obj->screen, scalar_field_obj->scalars, offset,
       &color_sequence_obj->_sequence, interpolator_obj->fn);
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);
@@ -64,18 +84,19 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
 }
 
 PyObject* compose(PyObject* self_in, PyObject* args) {
-  InterfaceObject* self = (InterfaceObject*)self_in;
+  (void)self_in;
+  InterfaceObject* interface_obj;
   ScreenObject* screen;
   Py_buffer sprite;
   CompositorObject* compositor;
   if (!PyArg_ParseTuple(
-          args, "O!y*O!", &ScreenType, &screen, &sprite, &CompositorType,
+          args, "O!O!y*O!", &InterfaceType, &interface_obj, &ScreenType, &screen, &sprite, &CompositorType,
           &compositor)) {
     return NULL;
   }
 
   int ret = sicgl_compose(
-      &self->interface, screen->screen, sprite.buf, compositor->fn,
+      &interface_obj->interface, screen->screen, sprite.buf, compositor->fn,
       compositor->args);
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);
@@ -87,20 +108,37 @@ PyObject* compose(PyObject* self_in, PyObject* args) {
 }
 
 PyObject* blit(PyObject* self_in, PyObject* args) {
-  InterfaceObject* self = (InterfaceObject*)self_in;
+  (void)self_in;
+  InterfaceObject* interface_obj;
   ScreenObject* screen;
   Py_buffer sprite;
-  if (!PyArg_ParseTuple(args, "O!y*", &ScreenType, &screen, &sprite)) {
+  if (!PyArg_ParseTuple(args, "O!O!y*", &InterfaceType, &interface_obj, &ScreenType, &screen, &sprite)) {
     return NULL;
   }
 
-  int ret = sicgl_blit(&self->interface, screen->screen, sprite.buf);
+  int ret = sicgl_blit(&interface_obj->interface, screen->screen, sprite.buf);
 
   PyBuffer_Release(&sprite);
 
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;
+  }
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+PyObject* scale(PyObject* self_in, PyObject* args) {
+  (void)self_in;
+  InterfaceObject* interface_obj;
+  double fraction;
+  if (!PyArg_ParseTuple(args, "O!d", &InterfaceType, &interface_obj, &fraction)) {
+    return NULL;
+  }
+  color_t* memory = interface_obj->interface.memory;
+  for (ext_t idx = 0; idx < interface_obj->interface.length; idx++) {
+    memory[idx] = color_scale(memory[idx], fraction);
   }
 
   Py_INCREF(Py_None);

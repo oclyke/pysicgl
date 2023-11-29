@@ -91,6 +91,8 @@ static PyMethodDef funcs[] = {
      "compose a sprite onto the interface memory using a composition method"},
     {"scalar_field", (PyCFunction)scalar_field, METH_VARARGS | METH_KEYWORDS,
      "map a scalar field onto the interface through a color sequence"},
+    {"scale", (PyCFunction)scale, METH_VARARGS,
+     "scale the interface memory by a scalar factor"},
 
     // interface relative drawing
 

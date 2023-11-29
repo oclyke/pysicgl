@@ -4,3 +4,4 @@
 PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds);
 PyObject* compose(PyObject* self_in, PyObject* args);
 PyObject* blit(PyObject* self_in, PyObject* args);
+PyObject* scale(PyObject* self_in, PyObject* args);
