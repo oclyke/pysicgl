@@ -27,9 +27,9 @@ static int deallocate_sequence(ColorSequenceObject* self) {
     goto out;
   }
 
-  PyMem_Free(self->_sequence.colors);
-  self->_sequence.colors = NULL;
-  self->_sequence.length = 0;
+  PyMem_Free(self->sequence.colors);
+  self->sequence.colors = NULL;
+  self->sequence.length = 0;
 
 out:
   return ret;
@@ -49,12 +49,12 @@ static int allocate_sequence(ColorSequenceObject* self, size_t len) {
     goto out;
   }
 
-  self->_sequence.colors = PyMem_Malloc(len * sizeof(color_t));
-  if (NULL == self->_sequence.colors) {
+  self->sequence.colors = PyMem_Malloc(len * sizeof(color_t));
+  if (NULL == self->sequence.colors) {
     ret = -ENOMEM;
     goto out;
   }
-  self->_sequence.length = len;
+  self->sequence.length = len;
 
 out:
   return ret;
@@ -101,7 +101,7 @@ static PyObject* interpolate(
     // input is a single sample, return the interpolated color directly
     color_t color;
     ret =
-        interp_fn(&self->_sequence, (double)PyLong_AsLong(samples_obj), &color);
+        interp_fn(&self->sequence, (double)PyLong_AsLong(samples_obj), &color);
     if (0 != ret) {
       PyErr_SetNone(PyExc_OSError);
       return NULL;
@@ -111,7 +111,7 @@ static PyObject* interpolate(
   } else if (PyFloat_Check(samples_obj)) {
     // input is a single sample, return the interpolated color directly
     color_t color;
-    ret = interp_fn(&self->_sequence, PyFloat_AsDouble(samples_obj), &color);
+    ret = interp_fn(&self->sequence, PyFloat_AsDouble(samples_obj), &color);
     if (0 != ret) {
       PyErr_SetNone(PyExc_OSError);
       return NULL;
@@ -125,7 +125,7 @@ static PyObject* interpolate(
     for (size_t idx = 0; idx < num_samples; idx++) {
       color_t color;
       ret = interp_fn(
-          &self->_sequence, PyFloat_AsDouble(PyList_GetItem(samples_obj, idx)),
+          &self->sequence, PyFloat_AsDouble(PyList_GetItem(samples_obj, idx)),
           &color);
       if (0 != ret) {
         PyErr_SetNone(PyExc_OSError);
@@ -145,7 +145,7 @@ static PyObject* interpolate(
     for (size_t idx = 0; idx < num_samples; idx++) {
       color_t color;
       ret = interp_fn(
-          &self->_sequence, PyFloat_AsDouble(PyTuple_GetItem(samples_obj, idx)),
+          &self->sequence, PyFloat_AsDouble(PyTuple_GetItem(samples_obj, idx)),
           &color);
       if (0 != ret) {
         PyErr_SetNone(PyExc_OSError);
@@ -169,12 +169,12 @@ static PyObject* interpolate(
 
 static Py_ssize_t mp_length(PyObject* self_in) {
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
-  return self->_sequence.length;
+  return self->sequence.length;
 }
 
 static PyObject* mp_subscript(PyObject* self_in, PyObject* key) {
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
-  return PyLong_FromLong(self->_sequence.colors[PyLong_AsLong(key)]);
+  return PyLong_FromLong(self->sequence.colors[PyLong_AsLong(key)]);
 }
 
 static PyObject* tp_iter(PyObject* self_in) {
@@ -186,9 +186,9 @@ static PyObject* tp_iter(PyObject* self_in) {
 
 static PyObject* tp_iternext(PyObject* self_in) {
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
-  if (self->iterator_index < self->_sequence.length) {
+  if (self->iterator_index < self->sequence.length) {
     PyObject* item =
-        PyLong_FromLong(self->_sequence.colors[self->iterator_index]);
+        PyLong_FromLong(self->sequence.colors[self->iterator_index]);
     self->iterator_index++;
     return item;
   } else {
@@ -234,7 +234,7 @@ static int tp_init(PyObject* self_in, PyObject* args, PyObject* kwds) {
 
   // copy the colors into the sequence
   for (size_t idx = 0; idx < len; idx++) {
-    self->_sequence.colors[idx] =
+    self->sequence.colors[idx] =
         PyLong_AsLong(PyList_GetItem(colors_obj, idx));
   }
 

@@ -9,7 +9,7 @@
 extern PyTypeObject ColorSequenceType;
 
 typedef struct {
-  PyObject_HEAD color_sequence_t _sequence;
+  PyObject_HEAD color_sequence_t sequence;
 
   // iterator state
   // protected by the GIL

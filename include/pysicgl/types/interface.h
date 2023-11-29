@@ -18,8 +18,8 @@ typedef struct {
 
   // a ScreenObject which is linked to
   // the interface screen by reference
-  ScreenObject* _screen;
+  ScreenObject* screen;
 
   // a buffer backs up the interface memory
-  Py_buffer _memory_buffer;
+  Py_buffer memory_buffer;
 } InterfaceObject;

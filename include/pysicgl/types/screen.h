@@ -18,5 +18,5 @@ typedef struct {
   screen_t _screen;
 
   // a flag to explicitly indicate whether this is an object or reference
-  bool _is_reference;
+  bool is_reference;
 } ScreenObject;

@@ -157,10 +157,10 @@ static ScreenObject* new_screen_object(screen_t* ref) {
   if (self != NULL) {
     if (NULL == ref) {
       self->screen = &self->_screen;
-      self->_is_reference = false;
+      self->is_reference = false;
     } else {
       self->screen = ref;
-      self->_is_reference = true;
+      self->is_reference = true;
     }
     int ret = screen_normalize(self->screen);
     if (0 != ret) {

@@ -70,7 +70,7 @@ PyObject* scalar_field(PyObject* self_in, PyObject* args, PyObject* kwds) {
 
   ret = sicgl_scalar_field(
       &interface_obj->interface, field_obj->screen, scalar_field_obj->scalars,
-      offset, &color_sequence_obj->_sequence, interpolator_obj->fn);
+      offset, &color_sequence_obj->sequence, interpolator_obj->fn);
   if (0 != ret) {
     PyErr_SetNone(PyExc_OSError);
     return NULL;

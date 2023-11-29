@@ -30,8 +30,8 @@ int Interface_remove_screen(InterfaceObject* self) {
     goto out;
   }
 
-  if (NULL != self->_screen) {
-    Py_DECREF((PyObject*)self->_screen);
+  if (NULL != self->screen) {
+    Py_DECREF((PyObject*)self->screen);
     self->interface.screen = NULL;
   }
 
@@ -53,9 +53,9 @@ int Interface_set_screen(InterfaceObject* self, ScreenObject* screen_obj) {
     goto out;
   }
 
-  self->_screen = screen_obj;
-  Py_INCREF((PyObject*)self->_screen);
-  self->interface.screen = self->_screen->screen;
+  self->screen = screen_obj;
+  Py_INCREF((PyObject*)self->screen);
+  self->interface.screen = self->screen->screen;
 
 out:
   return ret;
@@ -74,8 +74,8 @@ int Interface_remove_memory(InterfaceObject* self) {
     goto out;
   }
 
-  if (NULL != self->_memory_buffer.obj) {
-    PyBuffer_Release(&self->_memory_buffer);
+  if (NULL != self->memory_buffer.obj) {
+    PyBuffer_Release(&self->memory_buffer);
     self->interface.memory = NULL;
     self->interface.length = 0;
   }
@@ -102,12 +102,12 @@ int Interface_set_memory(
   size_t bpp = bytes_per_pixel();
 
   ret = PyObject_GetBuffer(
-      (PyObject*)bytearray_obj, &self->_memory_buffer, PyBUF_WRITABLE);
+      (PyObject*)bytearray_obj, &self->memory_buffer, PyBUF_WRITABLE);
   if (0 != ret) {
     goto out;
   }
-  self->interface.memory = self->_memory_buffer.buf;
-  self->interface.length = self->_memory_buffer.len / bpp;
+  self->interface.memory = self->memory_buffer.buf;
+  self->interface.length = self->memory_buffer.len / bpp;
 
 out:
   return ret;
@@ -132,8 +132,8 @@ static PyObject* get_screen(PyObject* self_in, void* closure) {
   // it is important to return a NEW REFERENCE to the object,
   // otherwise its reference count will be deleted by the caller
   // who is passed the reference and later decrements the refcount
-  Py_INCREF((PyObject*)self->_screen);
-  return (PyObject*)self->_screen;
+  Py_INCREF((PyObject*)self->screen);
+  return (PyObject*)self->screen;
 }
 
 /**
@@ -149,7 +149,7 @@ static PyObject* get_screen(PyObject* self_in, void* closure) {
 static PyObject* get_memory(PyObject* self_in, void* closure) {
   (void)closure;
   InterfaceObject* self = (InterfaceObject*)self_in;
-  return PyMemoryView_FromBuffer(&self->_memory_buffer);
+  return PyMemoryView_FromBuffer(&self->memory_buffer);
 }
 
 /**
