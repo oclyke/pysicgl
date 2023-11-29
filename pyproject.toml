@@ -1,7 +1,7 @@
 [project]
 name = "pysicgl"
 authors = [
-  {name = "oclyke", email = "oclyke@gmail.com"},
+  {name = "oclyke", email = "oclyke@oclyke.dev"},
 ]
 description = "sicgl for Python"
 readme = "README.md"
