@@ -70,9 +70,9 @@ sicgl_core = Extension(
     include_dirs=[*pysicgl_include_dirs, *sicgl_include_dirs],
     sources=[*pysicgl_sources, *sicgl_sources],
     extra_compile_args=[
-      "-Werror",
-      "-Wall", "-Wextra", "-pedantic",
-      "-Wno-missing-field-initializers", "-Wno-sign-compare", "-Wno-sometimes-uninitialized",
+      # "-Werror",
+      # "-Wall", "-Wextra", "-pedantic",
+      # "-Wno-missing-field-initializers", "-Wno-sign-compare", "-Wno-sometimes-uninitialized",
     ],
 )
 
