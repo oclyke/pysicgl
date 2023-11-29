@@ -43,6 +43,23 @@ python setup.py test
 python setup.py install
 ```
 
+**build and upload to pypi**
+
+Note: this is how you can do it manually, but it is automated by github actions.
+
+```bash
+git checkout <tag>
+python setup.py sdist
+twine upload dist/*
+
+twine upload dist/* --repository-url https://test.pypi.org/legacy/
+
+# username: __token__
+# password: <token>
+twine upload --repository testpypi dist/* # do a test upload
+twine upload dist/* # do a real upload
+```
+
 # formatting
 
 ```
