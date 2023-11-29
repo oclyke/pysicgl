@@ -169,7 +169,7 @@ static PyObject* interpolate(
 
 static Py_ssize_t mp_length(PyObject* self_in) {
   ColorSequenceObject* self = (ColorSequenceObject*)self_in;
-  return PyLong_FromLong(self->_sequence.length);
+  return self->_sequence.length;
 }
 
 static PyObject* mp_subscript(PyObject* self_in, PyObject* key) {

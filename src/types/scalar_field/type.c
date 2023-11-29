@@ -59,7 +59,7 @@ out:
 
 static Py_ssize_t mp_length(PyObject* self_in) {
   ScalarFieldObject* self = (ScalarFieldObject*)self_in;
-  return PyLong_FromLong(self->length);
+  return self->length;
 }
 
 static PyObject* mp_subscript(PyObject* self_in, PyObject* key) {
